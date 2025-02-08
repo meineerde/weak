@@ -4,8 +4,7 @@
 --title=WeakSet
 --template default
 --default-return undocumented
---load
-./lib/weak_set.rb
+lib/**/*.rb
 -
 README.md
 CHANGELOG.md
