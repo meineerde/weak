@@ -22,6 +22,20 @@ set
 # => #<WeakSet: {}>
 ```
 
+## Usage
+
+Please refer to the documentation at:
+
+- [📘 Documentation](https://www.rubydoc.info/gems/weak_set)
+- [💥 Development Documentation](https://www.rubydoc.info/github/meineerde/weak_set/main) of the [main branch](https://github.com/meineerde/weak_set/tree/main)
+
+> [!WARNING]
+> WeakSet is not inherently thread-safe. When accessing a WeakSet from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
+
+The `WeakSet` library used Ruby's [ObjectSpace::WeakMap](https://docs.ruby-lang.org/en/3.4/ObjectSpace/WeakMap.html) under the hood. Unfortunately, different Ruby implementations and versions such as Ruby (aka. MRI, aka. YARV), JRuby, or TruffleRuby show quite diverse behavior in their respective `ObjectSpace::WeakMap` implementations. To provide a unified behavior on all supported Rubies, we use different storage strategies.
+
+The appropriate strategt is selected automatically. The behavior exposed by `WeakSet` should be identical across all implementations. If you experience diverging behavior, we consider this a bug. Please [open an issue](https://github.com/meineerde/weak_set/issues/new) and describe the diverging or unexpected behavior.
+
 ## Installation
 
 WeakSet supports the following Ruby implementation:
@@ -42,7 +56,7 @@ If [bundler](https://bundler.io/) is not being used to manage dependencies, inst
 gem install weak_set
 ```
 
-### Example
+## Example
 
 A WeakSet can be used as a cache or for validation purposes were it is not desirable to keep a full object reference. For example, it can be used with a basic `ConnectionPool` as follows
 
@@ -106,20 +120,6 @@ During `checkout` we remember a reference to the returned connection object in t
 If the caller just "forgets" the connection, our pool will also forget it during the next Ruby garbage collection run.
 
 If the caller returns the connection by calling `checkin` again, we can verify that we have in fact created the object by deleting it from the `@outstanding` list. That way, the a checked-out connection can be checked-in again only once and only if it was initially created by the `ConnectionPool`.
-
-## Usage
-
-Please refer to the documentation at:
-
-- [📘 Documentation](https://www.rubydoc.info/gems/weak_set)
-- [💥 Development Documentation](https://www.rubydoc.info/github/meineerde/weak_set/main) of the [main branch](https://github.com/meineerde/weak_set/tree/main)
-
-> [!WARNING]
-> WeakSet is not inherently thread-safe. When accessing a WeakSet from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
-
-The `WeakSet` library used Ruby's [ObjectSpace::WeakMap](https://docs.ruby-lang.org/en/3.4/ObjectSpace/WeakMap.html) under the hood. Unfortunately, different Ruby implementations and versions such as Ruby (aka. MRI, aka. YARV), JRuby, or TruffleRuby show quite diverse behavior in their respective `ObjectSpace::WeakMap` implementations. To provide a unified behavior on all supported Rubies, we use different storage strategies.
-
-The appropriate strategt is selected automatically. The behavior exposed by `WeakSet` should be identical across all implementations. If you experience diverging behavior, we consider this a bug. Please [open an issue](https://github.com/meineerde/weak_set/issues/new) and describe the diverging or unexpected behavior.
 
 ## Development
 
