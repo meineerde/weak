@@ -7,7 +7,7 @@
 
 ##
 class WeakSet
-  # This WeakSet implementation targets Ruby >= 3.3.0.
+  # This WeakSet strategy targets Ruby >= 3.3.0.
   # Older Ruby versions require additional indirections implemented in
   # {WeakSet::WeakKeys}:
   #
@@ -21,6 +21,15 @@ class WeakSet
   # the WeakMap as a storage the same way a `Set` uses a `Hash` object object as
   # storage.
   module WeakKeysWithDelete
+    # Checks if this strategy is usable for the current Ruby version.
+    #
+    # @return [Bool] truethy for Ruby (aka. MRI, aka. YARV) >= 3.3.0,
+    #   falsey otherwise
+    def self.usable?
+      RUBY_ENGINE == "ruby" &&
+        ObjectSpace::WeakMap.instance_methods.include?(:delete)
+    end
+
     # Initialize the weak map
     # @return [void]
     def initialize

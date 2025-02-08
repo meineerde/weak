@@ -7,7 +7,7 @@
 
 ##
 class WeakSet
-  # This WeakSet implementation targets Ruby < 3.3.0.
+  # This WeakSet strategy targets Ruby < 3.3.0.
   #
   # Its ObjectSpace::WeakMap uses weak keys and weak values so that either the
   # key or the value can be independently garbage collected. If either of them
@@ -21,6 +21,13 @@ class WeakSet
   module WeakKeys
     class DeletedEntry; end
     private_constant :DeletedEntry
+
+    # Checks if this strategy is usable for the current Ruby version.
+    #
+    # @return [Bool] truethy for Ruby (aka. MRI, aka. YARV), falsey otherwise
+    def self.usable?
+      RUBY_ENGINE == "ruby"
+    end
 
     # Initialize the weak map
     # @return [void]

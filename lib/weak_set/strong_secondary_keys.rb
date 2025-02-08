@@ -7,7 +7,7 @@
 
 ##
 class WeakSet
-  # This WeakSet implementation targets JRuby < 9.4.6.0.
+  # This WeakSet strategy targets JRuby < 9.4.6.0.
   #
   # These JRuby versions have a similar WeakMap as newer JRubies with strong
   # keys and weak values. Thus, only the value object can be garbage collected
@@ -32,9 +32,22 @@ class WeakSet
   # However, its entries are rather cheap with Integer keys and "empty" objects
   # as values. We perform manual garbage collection of this secondary key map
   # during {StrongSecondaryKeys#include?} if required.
+  #
+  # As this strategy is the most conservative with the fewest requirements to
+  # the WeakMap, we use it as a default or fallback if there is no better
+  # strategy.
   module StrongSecondaryKeys
     class DeletedEntry; end
     private_constant :DeletedEntry
+
+    # Checks if this strategy is usable for the current Ruby version.
+    #
+    # @return [Bool] always `true` to indicate that this stragegy should be
+    #   usable with any Ruby implementation which proivides an
+    #   `ObjectSpace::WeakMap`.
+    def self.usable?
+      true
+    end
 
     # Initialize the weak map
     # @return [void]

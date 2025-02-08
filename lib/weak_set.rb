@@ -7,6 +7,11 @@
 
 require_relative "weak_set/version"
 
+require_relative "weak_set/weak_keys_with_delete"
+require_relative "weak_set/weak_keys"
+require_relative "weak_set/strong_keys"
+require_relative "weak_set/strong_secondary_keys"
+
 ##
 # This library provides the WeakSet class. It behaves similar to the Set class
 # of the Ruby standard library, but all values are only weakly referenced.
@@ -69,64 +74,22 @@ require_relative "weak_set/version"
 class WeakSet
   include Enumerable
 
-  case RUBY_ENGINE
-  when "ruby"
-    if ObjectSpace::WeakMap.instance_methods.include?(:delete)
-      # ObjectSpace::WeakMap#delete was added in Ruby 3.3.0.
-      # https://bugs.ruby-lang.org/issues/19561
-      #
-      # This allows for the fastest and most straight-forward implementation.
-      require_relative "weak_set/weak_keys_with_delete"
-      include WeakSet::WeakKeysWithDelete
-    else
-      # On older Ruby versions, we emulate the delete by setting the value to
-      # nil. When using the whole set, we need to manually exclude nil values.
-      require_relative "weak_set/weak_keys"
-      include WeakSet::WeakKeys
-    end
-  when "jruby"
-    # JRuby is compatible to Ruby 3.0 (or more specifically: Ruby 3.1) since
-    # version 9.4.0.0 which is thus the minimal version we support.
-    #
-    # In JRuby's ObjectSpace::WeakMap implementation, only the value is a weak
-    # reference while the key is a strong reference. Thus, we can't use the
-    # actual object as a key. As a workaround, we use the object's object_id
-    # as a key.
-    case Gem::Version.new(RUBY_ENGINE_VERSION)
-    when Gem::Requirement.new(">= 9.4.6.0")
-      # On newer JRuby versions, we can use the object_id directly as a key in
-      # the ObjectSpace::WeakMap.
-      require_relative "weak_set/strong_keys"
-      include WeakSet::StrongKeys
-    else
-      # Older JRuby versions do not handle different object representations of
-      # Integers in a WeakMap so we  we use a more indirect implementation with
-      # a secondary lookup table.
-      require_relative "weak_set/strong_secondary_keys"
-      include WeakSet::StrongSecondaryKeys
-    end
-  when "truffleruby"
-    # TruffleRuby is compatible to Ruby 3.0 since version 22.0.0.2 which is thus
-    # the minimal version we support.
-    #
-    # TruffleRuby uses strong keys for its ObjectSpace::WeakMap, similar to
-    # modern JRuby above. Integer keys work just fine though.
-    #
-    # TruffleRuby < 22 might require the same workaround as older JRuby
-    # versions. See https://github.com/oracle/truffleruby/issues/2267
-    require_relative "weak_set/strong_keys"
-    include WeakSet::StrongKeys
-  else
-    # For other implementations, we play it save and use the most conservative
-    # option. See the explanation of the old JRuby versions above.
-    require_relative "weak_set/strong_secondary_keys"
-    include WeakSet::StrongSecondaryKeys
-  end
+  # We try to find the best implementation strategy based on the current Ruby
+  # engine and version. The chosen `STRATEGY` is included into the {WeakSet}
+  # class.
+  STRATEGY = [
+    WeakSet::WeakKeysWithDelete,
+    WeakSet::WeakKeys,
+    WeakSet::StrongKeys,
+    WeakSet::StrongSecondaryKeys
+  ].find(&:usable?)
+
+  include STRATEGY
 
   #############################################################################
-  # Here follows the documentation of implementation specific methods which are
+  # Here follows the documentation of strategy-specific methods which are
   # implemented in one of the include modules depending on the current Ruby.
-  #
+
   # @!macro _note_object_equality
   #   @note WeakSet does not test member equality with `==` or `eql?`. Instead,
   #     it always checks strict object equality, so that, e.g., different

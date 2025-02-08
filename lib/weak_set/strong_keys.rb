@@ -7,7 +7,7 @@
 
 ##
 class WeakSet
-  # This WeakSet implementation targets JRuby >= 9.4.6.0 and TruffleRuby >= 22.
+  # This WeakSet strategy targets JRuby >= 9.4.6.0 and TruffleRuby >= 22.
   # Older versions require additional indirections implemented in
   # {WeakSet::StrongSecondaryKeys}:
   #
@@ -31,6 +31,19 @@ class WeakSet
   module StrongKeys
     class DeletedEntry; end
     private_constant :DeletedEntry
+
+    # Checks if this strategy is usable for the current Ruby version.
+    #
+    # @return [Bool] truethy for Ruby, TruffleRuby and modern JRuby, falsey
+    #   otherwise
+    def self.usable?
+      case RUBY_ENGINE
+      when "ruby", "truffleruby"
+        true
+      when "jruby"
+        Gem::Version.new(RUBY_ENGINE_VERSION) >= Gem::Version.new("9.4.6.0")
+      end
+    end
 
     # initialize the weak map
     # @return [void]
