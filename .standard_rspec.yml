@@ -1,0 +1,16 @@
+require:
+  - rubocop-rspec
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleExpectations:
+  Max: 15
+
+RSpec/MessageSpies:
+  # Disable the Cop.
+  # The default have_received style is impractical in many cases, thus we
+  # generally use the receive style, but adapt this as required. We try to
+  # avoid stubbing as far as possible and primarily use message expectations to
+  # verify that certian methods are called as expected.
+  Enabled: false

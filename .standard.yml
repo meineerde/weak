@@ -1,2 +1,29 @@
 ruby_version: 3.0
 parallel: true
+
+extend_config:
+  - .standard_rspec.yml
+
+ignore:
+  - "**/*":
+      # Sometimes, we need to rescue from Exception for cleanup. We always make
+      # sure to re-raise the original exception.
+      - Lint/RescueException
+
+      # We name our binary operator parameters sometimes with a name other than
+      # `other` to help us better document the parameters. Naming is only relevant
+      # to the method itself and its documentation anyways.
+      - Naming/BinaryOperatorParameterName
+
+  - "spec/**/*":
+      # We specifically check if our operations respond correctly with the same
+      # operands in specs. This is deliberate there.
+      - Lint/BinaryOperatorWithIdenticalOperands
+
+      # Same as above for Lint/BinaryOperatorWithIdenticalOperands
+      - RSpec/IdenticalEqualityAssertion
+
+      # We have only a single class to test and refer a lot to this class
+      # Using described_class instead of WeakSet would look *much* uglier and
+      # would not help refactoring at all.
+      - RSpec/DescribedClass

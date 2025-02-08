@@ -1,0 +1,29 @@
+# Copyright (c) Holger Just
+#
+# This software may be modified and distributed under the terms
+# of the MIT license. See the LICENSE.txt file for details.
+
+name: Standard
+
+on:
+  pull_request:
+  push:
+    paths-ignore:
+      - README.md
+      - CHANGELOG.md
+
+jobs:
+  standard:
+    name: Standard Ruby
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_WITHOUT: "development:doc"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
+      - name: Run standard
+        run: bundle exec standardrb
