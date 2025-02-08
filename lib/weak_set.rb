@@ -355,7 +355,7 @@ class WeakSet
   end
 
   # WeakSets can't be frozen since this is not enforced by the underlying
-  # ObjectSpace::WeakMap implementation. Thus, we try to signal this by not
+  # `ObjectSpace::WeakMap` implementation. Thus, we try to signal this by not
   # actually setting the `frozen?` flag and ignoring attempts to freeze us.
   #
   # @param freeze [Bool, nil] ignored; we always behave as if this is false. If
@@ -424,7 +424,7 @@ class WeakSet
   end
 
   # WeakSets can't be frozen since this is not enforced by the underlying
-  # ObjectSpace::WeakMap implementation. Thus, we try ti signal this by not
+  # `ObjectSpace::WeakMap` implementation. Thus, we try to signal this by not
   # actually setting the `frozen?` flag and ignoring attempts to freeze us.
   #
   # @return [self]
