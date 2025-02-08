@@ -127,7 +127,7 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 [![code style: standard badge](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standardrb/standard)
 
-We follow [Standard Ruby]. Please make sure that all code is formatted according to the Standard Rules. This is enforced by the CI. Please try to keep all code lines at or below 100 characters in length.
+We follow the Standard Ruby style. Please make sure that all code is formatted according to the Standard rules. This is enforced by the CI. Please try to keep all code lines at or below 100 characters in length.
 
 ## Contributing
 
