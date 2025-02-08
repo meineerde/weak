@@ -578,16 +578,23 @@ RSpec.describe WeakSet do
       expect(set).to contain_exactly(1, 2, 3)
     end
 
-    it "returns the set if the object was deleted" do
+    it "returns the set if the object was deleted, nil otherwise" do
       expect(set.delete?(2)).to equal set
+      expect(set.delete?(2)).to be_nil
 
       set.add nil
       expect(set.delete?(nil)).to equal set
+      expect(set.delete?(nil)).to be_nil
+
+      set.add false
+      expect(set.delete?(false)).to equal set
+      expect(set.delete?(false)).to be_nil
     end
 
     it "returns nil if the object was not in the set" do
       expect(set.delete?(5)).to be_nil
       expect(set.delete?(nil)).to be_nil
+      expect(set.delete?(false)).to be_nil
     end
 
     it "considers object identity" do
