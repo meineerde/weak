@@ -51,6 +51,15 @@ class WeakSet
       end.value
     end
 
+    def enumerable_mock(obj, method = :each)
+      each = instance_double(Enumerator)
+      allow(each).to receive(:respond_to?) { |m| m == method }
+      allow(each).to receive(method) do |&block|
+        obj.each(&block)
+      end
+      each
+    end
+
     def garbage_collect_until(timeout = 5)
       started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       loop do

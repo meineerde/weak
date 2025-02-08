@@ -11,22 +11,6 @@ require "pp"
 require "set"
 
 RSpec.describe WeakSet do
-  before do
-    # Define a Helper class to waro an enumerable object ina way that we ONLY
-    # provide an each method, without being an Enumerable. This is used to
-    # check the less-common case in do_with_enum.
-    each_class = Class.new do
-      def initialize(obj)
-        @obj = obj
-      end
-
-      def each(&block)
-        @obj.each(&block)
-      end
-    end
-    stub_const("Each", each_class)
-  end
-
   let(:set) { WeakSet.new }
 
   it "is an Enumerable" do
@@ -150,8 +134,15 @@ RSpec.describe WeakSet do
         .and contain_exactly(:foo, :bar)
     end
 
-    it "allows to use an Each" do
-      expect(set | Each.new([:bar]))
+    it "allows to use an object which responds only to #each" do
+      expect(set | enumerable_mock([:bar], :each))
+        .to be_a(WeakSet)
+        .and not_equal(set)
+        .and contain_exactly(:foo, :bar)
+    end
+
+    it "allows to use an object which responds only to #each_entry" do
+      expect(set | enumerable_mock([:bar], :each_entry))
         .to be_a(WeakSet)
         .and not_equal(set)
         .and contain_exactly(:foo, :bar)
@@ -192,8 +183,15 @@ RSpec.describe WeakSet do
         .and contain_exactly(:bar)
     end
 
-    it "allows to use an Each" do
-      expect(set & Each.new([:bar, :boing]))
+    it "allows to use an object which responds only to #each" do
+      expect(set & enumerable_mock([:bar, :boing], :each))
+        .to be_a(WeakSet)
+        .and not_equal(set)
+        .and contain_exactly(:bar)
+    end
+
+    it "allows to use an object which responds only to #each_entry" do
+      expect(set & enumerable_mock([:bar, :boing], :each_entry))
         .to be_a(WeakSet)
         .and not_equal(set)
         .and contain_exactly(:bar)
@@ -242,8 +240,15 @@ RSpec.describe WeakSet do
         .and contain_exactly(:bar)
     end
 
-    it "allows to use an Each" do
-      expect(set - Each.new([:foo]))
+    it "allows to use an object which responds only to #each" do
+      expect(set - enumerable_mock([:foo], :each))
+        .to be_a(WeakSet)
+        .and not_equal(set)
+        .and contain_exactly(:bar)
+    end
+
+    it "allows to use an object which responds only to #each_entry" do
+      expect(set - enumerable_mock([:foo], :each_entry))
         .to be_a(WeakSet)
         .and not_equal(set)
         .and contain_exactly(:bar)
@@ -691,7 +696,8 @@ RSpec.describe WeakSet do
     it "accepts any Enumerable" do
       expect(set.disjoint?([7])).to be true
       expect(set.disjoint?(Set[7])).to be true
-      expect(set.disjoint?(Each.new([7]))).to be true
+      expect(set.disjoint?(enumerable_mock([7], :each))).to be true
+      expect(set.disjoint?(enumerable_mock([7], :each_entry))).to be true
     end
 
     it "raises ArgumentError on invalid arguments" do
@@ -967,7 +973,8 @@ RSpec.describe WeakSet do
     it "accepts any Enumerable" do
       expect(set.intersect?([3])).to be true
       expect(set.intersect?(Set[3])).to be true
-      expect(set.intersect?(Each.new([3]))).to be true
+      expect(set.intersect?(enumerable_mock([3], :each))).to be true
+      expect(set.intersect?(enumerable_mock([3], :each_entry))).to be true
     end
 
     it "raises ArgumentError on invalid arguments" do
