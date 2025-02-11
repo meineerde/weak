@@ -787,6 +787,20 @@ RSpec.describe WeakSet do
     end
   end
 
+  describe "#eql?" do
+    it "returns true for the same sets" do
+      expect(set).to eql set
+    end
+
+    it "returns false on different sets" do
+      expect(set).not_to eql WeakSet[]
+
+      expect(WeakSet[:a, :b]).not_to eql WeakSet[:a, :b]
+      expect(WeakSet[1, :b]).not_to eql WeakSet[:a, :b]
+      expect(WeakSet[1, 2]).not_to eql WeakSet[:a, :b]
+    end
+  end
+
   describe "#freeze" do
     before do
       allow(set).to receive(:warn)
@@ -808,6 +822,20 @@ RSpec.describe WeakSet do
     it "warns that we can not freeze a WeakSet" do
       set.freeze
       expect(set).to have_received(:warn).with("Can't freeze WeakSet")
+    end
+  end
+
+  describe "#hash" do
+    it "returns the same value for equal sets" do
+      expect(set.hash).to eq set.hash
+    end
+
+    it "returns false on different sets" do
+      expect(set.hash).not_to eq WeakSet.new.hash
+
+      expect(WeakSet[:a, :b].hash).not_to eql WeakSet[:a, :b].hash
+      expect(WeakSet[1, :b].hash).not_to eql WeakSet[:a, :b].hash
+      expect(WeakSet[1, 2].hash).not_to eql WeakSet[:a, :b].hash
     end
   end
 
