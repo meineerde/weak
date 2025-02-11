@@ -34,6 +34,8 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
 
   spec.metadata = {
+    "rubygems_mfa_required" => "true",
+
     "homepage_uri" => spec.homepage,
     "source_code_uri" => "https://github.com/meineerde/weak_set",
     "changelog_uri" => "https://github.com/meineerde/weak_set/blob/main/CHANGELOG.md",
