@@ -308,6 +308,12 @@ RSpec.describe WeakSet do
       expect(WeakSet[1]).not_to eq [1]
     end
 
+    it "checks the class" do
+      expect(set == :foo).to be false
+      expect(set == true).to be false
+      expect(set == Set[]).to be false
+    end
+
     it "compares recursive sets" do
       set.merge [:a, :b]
       set << set
@@ -1182,6 +1188,13 @@ RSpec.describe WeakSet do
       expect(enumerator.each { |i| i % 3 == 0 })
         .to equal(set)
         .and contain_exactly(1, 2, 4, 5, 7, 8, 10)
+    end
+
+    it "returns self if nil was deleted" do
+      set << nil
+      expect(set.reject!(&:nil?))
+        .to equal(set)
+        .and contain_exactly(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     end
   end
 

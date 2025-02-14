@@ -264,22 +264,25 @@ class WeakSet
   end
   alias_method :intersection, :&
 
-  # @param set [WeakSet] a weak set
+  # @param other [WeakSet] a weak set
   # @return [Integer, nil] `0` if `self` and the given `set` contain the same
   #   elements, `-1` / `+1` if `self` is a proper subset / superset of the given
   #   `set`, or `nil` if they both have unique elements or `set` is not a
   #   {WeakSet}
   # @!macro _note_object_equality
-  def <=>(set)
-    return unless WeakSet === set
+  def <=>(other)
+    return unless WeakSet === other
+    return 0 if equal?(other)
 
-    case size <=> set.size
+    other_ary = other.to_a
+    own_ary = to_a
+    case own_ary.size <=> other_ary.size
     when -1
-      -1 if all?(set)
+      -1 if own_ary.all?(other)
     when 1
-      1 if set.all?(self)
+      1 if other_ary.all?(self)
     else
-      0 if self == set
+      0 if own_ary.all?(other)
     end
   end
 
@@ -296,13 +299,14 @@ class WeakSet
   #     WeakSet[1, 3, 5] == WeakSet[1, 5]        #=> false
   #     WeakSet[1, 2, 3] == [1, 3, 2]            #=> false
   def ==(other)
-    if equal?(other)
-      true
-    elsif WeakSet === other
-      size == other.size && other.all?(self)
-    else
-      false
-    end
+    return true if equal?(other)
+    return false unless WeakSet === other
+
+    other_ary = other.to_a
+    own_ary = to_a
+
+    return false unless own_ary.size == other_ary.size
+    own_ary.all?(other)
   end
 
   # Returns a new weak set containing elements exclusive between `self` and the
@@ -404,8 +408,8 @@ class WeakSet
   def delete_if(&block)
     return enum_for(__method__) { size } unless block_given?
 
-    select(&block).each do |obj|
-      delete(obj)
+    each do |obj|
+      delete?(obj) if yield(obj)
     end
     self
   end
@@ -462,10 +466,13 @@ class WeakSet
   def intersect?(enum)
     case enum
     when WeakSet
-      if size < enum.size
-        any?(enum)
+      enum_ary = enum.to_a
+      own_ary = to_a
+
+      if own_ary.size < enum_ary.size
+        own_ary.any?(enum)
       else
-        enum.any?(self)
+        enum_ary.any?(self)
       end
     else
       enumerable(enum).any?(self)
@@ -486,8 +493,8 @@ class WeakSet
   def keep_if(&block)
     return enum_for(__method__) { size } unless block_given?
 
-    reject(&block).each do |obj|
-      delete(obj)
+    each do |obj|
+      delete?(obj) unless yield(obj)
     end
     self
   end
@@ -523,27 +530,35 @@ class WeakSet
     pp.text "#<#{self.class}: {#{empty? ? "" : "..."}}>"
   end
 
-  # @param set [WeakSet] a weak set
+  # @param other [WeakSet] a weak set
   # @return [Bool] `true` if `self` is a proper subset of the given `set`,
   #   `false` otherwise
   # @see subset?
-  def proper_subset?(set)
-    if WeakSet === set
-      !!(size < set.size && all?(set))
+  def proper_subset?(other)
+    if WeakSet === other
+      other_ary = other.to_a
+      own_ary = to_a
+
+      return false unless own_ary.size < other_ary.size
+      own_ary.all?(other)
     else
       raise ArgumentError, "value must be a weak set"
     end
   end
   alias_method :<, :proper_subset?
 
-  # @param set [WeakSet] a weak set
+  # @param other [WeakSet] a weak set
   # @return [Bool] `true` if `self` is a proper superset of the given `set`,
   #   `false` otherwise
   # @!macro _note_object_equality
   # @see superset?
-  def proper_superset?(set)
-    if WeakSet === set
-      !!(size > set.size && set.all?(self))
+  def proper_superset?(other)
+    if WeakSet === other
+      other_ary = other.to_a
+      own_ary = to_a
+
+      return false unless own_ary.size > other_ary.size
+      other_ary.all?(self)
     else
       raise ArgumentError, "value must be a weak set"
     end
@@ -586,8 +601,8 @@ class WeakSet
     return enum_for(__method__) { size } unless block_given?
 
     deleted_anything = false
-    select(&block).each do |obj|
-      deleted_anything = true unless delete(obj).nil?
+    each do |obj|
+      deleted_anything = true if yield(obj) && delete?(obj)
     end
 
     self if deleted_anything
@@ -610,22 +625,26 @@ class WeakSet
     return enum_for(__method__) { size } unless block_given?
 
     deleted_anything = false
-    reject(&block).each do |obj|
-      deleted_anything = true unless delete(obj).nil?
+    each do |obj|
+      deleted_anything = true if !yield(obj) && delete?(obj)
     end
 
     self if deleted_anything
   end
   alias_method :filter!, :select!
 
-  # @param set [WeakSet] a weak set
+  # @param other [WeakSet] a weak set
   # @return [Bool] `true` if `self` is a subset of the given `set`, `false`
   #   otherwise
   # @!macro _note_object_equality
   # @see proper_subset?
-  def subset?(set)
-    if WeakSet === set
-      !!(size <= set.size && all?(set))
+  def subset?(other)
+    if WeakSet === other
+      other_ary = other.to_a
+      own_ary = to_a
+
+      return false unless own_ary.size <= other_ary.size
+      own_ary.all?(other)
     else
       raise ArgumentError, "value must be a weak set"
     end
@@ -639,18 +658,22 @@ class WeakSet
   # @return [self]
   def subtract(enum)
     do_with_enum(enum) do |obj|
-      delete(obj)
+      delete?(obj)
     end
     self
   end
 
-  # @param set [WeakSet] a weak set
+  # @param other [WeakSet] a weak set
   # @return [Bool] `true` if `self` is a superset of the given `set`, `false`
   #   otherwise
   # @see proper_superset?
-  def superset?(set)
-    if WeakSet === set
-      !!(size >= set.size && set.all?(self))
+  def superset?(other)
+    if WeakSet === other
+      other_ary = other.to_a
+      own_ary = to_a
+
+      return false unless own_ary.size >= other_ary.size
+      other_ary.all?(self)
     else
       raise ArgumentError, "value must be a weak set"
     end
