@@ -253,7 +253,7 @@ class WeakSet
   # @!macro _note_object_equality
   #
   # @example
-  #     WeakSet[1, 3, 5] & WeakSet[3, 2, 1]        #=> #<WeakSet: {3, 1}>
+  #     WeakSet[1, 3, 5] & WeakSet[3, 2, 1]    #=> #<WeakSet: {3, 1}>
   #     WeakSet[1, 2, 9] & [2, 1, 3]           #=> #<WeakSet: {1, 2}>
   def &(enum)
     new_set = self.class.new

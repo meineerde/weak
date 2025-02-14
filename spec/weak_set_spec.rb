@@ -330,7 +330,7 @@ RSpec.describe WeakSet do
       expect(set1).not_to eq set2
     end
 
-    it "requires the same numebr of elements" do
+    it "requires the same number of elements" do
       set << :foo
       expect(WeakSet[]).not_to eq set
       expect(set).not_to eq WeakSet[]
