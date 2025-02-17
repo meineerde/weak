@@ -24,7 +24,7 @@ end
 group :test do
   gem "rspec", "~> 3.0", require: false
 
-  gem "standard", require: false
+  gem "standard", "~> 1.45", require: false
   gem "rubocop-rspec", require: false
 
   gem "simplecov", require: false
