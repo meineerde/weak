@@ -207,7 +207,9 @@ class WeakSet
         add yield(obj)
       end
     else
-      merge(enum)
+      do_with_enum(enum) do |obj|
+        add obj
+      end
     end
   end
 
