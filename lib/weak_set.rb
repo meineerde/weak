@@ -323,16 +323,13 @@ class WeakSet
   #     WeakSet[1, 2] ^ Set[2, 3]           #=> #<WeakSet: {3, 1}>
   #     WeakSet[1, :b, :c] ^ [:b, :d]       #=> #<WeakSet: {:d, 1, :c}>
   def ^(enum)
-    h = {}.compare_by_identity
-    do_with_enum(enum) do |obj|
-      h[obj] = true
-    end
+    return dup if enum.nil?
 
+    new_set = self.class.new.merge(enum)
     each do |obj|
-      h[obj] = true unless h.delete(obj)
+      new_set.add(obj) unless new_set.delete?(obj)
     end
-
-    self.class.new(h.keys)
+    new_set
   end
 
   # @param obj [Object] an object

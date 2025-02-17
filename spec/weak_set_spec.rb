@@ -353,6 +353,14 @@ RSpec.describe WeakSet do
       expect(other).to contain_exactly(2, 4, 5)
     end
 
+    it "treats nil like an empty set" do
+      set = WeakSet[1, 2, 3, 4]
+      expect(set ^ nil)
+        .to be_a(WeakSet)
+        .and not_equal(set)
+        .and contain_exactly(1, 2, 3, 4)
+    end
+
     it "checks objects by their identity" do
       s1 = +"string"
       s2 = +"string"
@@ -360,6 +368,24 @@ RSpec.describe WeakSet do
 
       expect((WeakSet[:foo, s1] ^ WeakSet[s2, :foo]).map(&:object_id))
         .to contain_exactly(s1.object_id, s2.object_id)
+    end
+
+    if RUBY_ENGINE == "jruby"
+      it "checks Java objects by their identity" do
+        require "jruby"
+
+        array = java.util.ArrayList.new
+        obj = java.lang.Object.new
+        array << obj
+
+        expect(obj).to equal(obj)
+
+        expect(WeakSet[:foo, array.first] ^ WeakSet[array.first, :foo])
+          .to have_attributes(
+            length: 0,
+            to_a: []
+          )
+      end
     end
 
     it "accepts an Enumerable" do
@@ -378,7 +404,6 @@ RSpec.describe WeakSet do
     it "raises AgumentError on invalid arguments" do
       expect { set ^ :foo }.to raise_error(ArgumentError)
       expect { set ^ 123 }.to raise_error(ArgumentError)
-      expect { set ^ nil }.to raise_error(ArgumentError)
       expect { set ^ true }.to raise_error(ArgumentError)
     end
   end
