@@ -727,7 +727,6 @@ class WeakSet
 
   # Callback method which is called on the new object during `dup` or `clone`
   def initialize_copy(orig)
-    initialize
-    merge(orig)
+    initialize(orig)
   end
 end
