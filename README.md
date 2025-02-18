@@ -32,9 +32,9 @@ Please refer to the documentation at:
 > [!WARNING]
 > WeakSet is not inherently thread-safe. When accessing a WeakSet from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
 
-The `WeakSet` library used Ruby's [ObjectSpace::WeakMap](https://docs.ruby-lang.org/en/3.4/ObjectSpace/WeakMap.html) under the hood. Unfortunately, different Ruby implementations and versions such as Ruby (aka. MRI, aka. YARV), JRuby, or TruffleRuby show quite diverse behavior in their respective `ObjectSpace::WeakMap` implementations. To provide a unified behavior on all supported Rubies, we use different storage strategies.
+WeakSet uses Ruby's [ObjectSpace::WeakMap](https://docs.ruby-lang.org/en/3.4/ObjectSpace/WeakMap.html) under the hood. Unfortunately, different Ruby implementations and versions such as Ruby (aka. MRI, aka. YARV), JRuby, or TruffleRuby show quite diverse behavior in their respective `ObjectSpace::WeakMap` implementations. To provide a unified behavior on all supported Rubies, we use multiple different storage strategies.
 
-The appropriate strategt is selected automatically. The behavior exposed by `WeakSet` should be identical across all implementations. If you experience diverging behavior, we consider this a bug. Please [open an issue](https://github.com/meineerde/weak_set/issues/new) and describe the diverging or unexpected behavior.
+The appropriate strategy is selected automatically. Their exposed behavior should be identical across all implementations. If you experience diverging behavior, we consider this a bug. Please [open an issue](https://github.com/meineerde/weak_set/issues/new) and describe the diverging or unexpected behavior.
 
 ## Installation
 
