@@ -58,7 +58,7 @@ class WeakSet
 
     # @!macro weak_set_method_add
     def add(obj)
-      key = @key_map[obj.__id__] ||= Object.new
+      key = @key_map[obj.__id__] ||= Object.new.freeze
       @map[key] = obj
       self
     end
