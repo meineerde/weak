@@ -698,7 +698,7 @@ class WeakSet
   # return [void]
   # @raise [ArgumentError] if the given `enum` is not enumerable
   def do_with_enum(enum, &block)
-    if self.class === enum
+    if WeakSet === enum
       enum.each(&block)
     elsif enum.respond_to?(:each_entry)
       enum.each_entry(&block)
