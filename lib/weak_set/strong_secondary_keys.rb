@@ -137,8 +137,7 @@ class WeakSet
     # avoid O(N^2) CPU costs.
     def collect_garbage
       key_map_size = @key_map.size
-      cutoff = (key_map_size * 0.2).ceil
-      cutoff = 2_000 if cutoff < 2_000
+      cutoff = [2000, (key_map_size * 0.2).ceil].max
 
       if key_map_size - @map.size > cutoff
         @key_map.each do |id, key|
