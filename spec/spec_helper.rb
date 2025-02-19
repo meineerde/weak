@@ -38,12 +38,23 @@ require "weak_set"
 
 class WeakSet
   module RSpecHelpers
-    # We sometimes need to use a separate thread to ensure that JRuby does not
-    # hold any internal references to objects which would prevent their garbage
-    # collection during the spec.
+    # We sometimes need to use a separate scope to ensure that JRuby and older
+    # Rubies do not hold any internal references to objects which would prevent
+    # their garbage collection during the spec.
     #
-    # To avoid cluttering test output when an expectation in a thread is missed,
-    # we disable error reporting here.
+    # JRuby can work with any new scope, e.g. a separate method call or a block.
+    # Ruby < 3.3 aparently is not happy with just a block scope and needs
+    # something "heavier" to break any remaining local references.
+    #
+    # To solve both peculiarities we use a new thread for the test setup. To
+    # avoid cluttering test output when an expectation in a thread is missed, we
+    # disable error reporting here.
+    #
+    # For actual users of a WeakSet, this shouldn't matter much. Depending on
+    # their Ruby engine and version, they may just experience delayed garbage
+    # collection of values and thus possible WeakSet elements.
+    #
+    # See https://github.com/jruby/jruby/discussions/8640
     def collectable(&block)
       Thread.new do
         Thread.current.report_on_exception = false
