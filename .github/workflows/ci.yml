@@ -16,6 +16,7 @@ jobs:
   rspec:
     name: Ruby ${{ matrix.ruby }}
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
