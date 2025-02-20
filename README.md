@@ -1,7 +1,7 @@
 # WeakSet
 
 [![gem version badge](https://badge.fury.io/rb/weak_set.svg)](https://rubygems.org/gems/weak_set)
-[![CI status badge](https://github.com/meineerde/weak_set/workflows/CI/badge.svg)](https://github.com/meineerde/weak_set/actions?query=workflow%3ACI)
+[![CI status badge](https://github.com/meineerde/weak_set/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak_set/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/meineerde/weak_set/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak_set?branch=main)
 
 WeakSet is a Ruby library which implements a collection of unordered values without strong object references.
