@@ -30,12 +30,6 @@ class WeakSet
         ObjectSpace::WeakMap.instance_methods.include?(:delete)
     end
 
-    # Initialize the weak map
-    # @return [void]
-    def initialize
-      @map = ObjectSpace::WeakMap.new
-    end
-
     # @!macro weak_set_method_add
     def add(obj)
       @map[obj] = true

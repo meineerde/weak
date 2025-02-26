@@ -43,17 +43,10 @@ class WeakSet
     # Checks if this strategy is usable for the current Ruby version.
     #
     # @return [Bool] always `true` to indicate that this stragegy should be
-    #   usable with any Ruby implementation which proivides an
+    #   usable with any Ruby implementation which provides an
     #   `ObjectSpace::WeakMap`.
     def self.usable?
       true
-    end
-
-    # Initialize the weak map
-    # @return [void]
-    def initialize
-      @map = ObjectSpace::WeakMap.new
-      @key_map = {}
     end
 
     # @!macro weak_set_method_add
@@ -66,7 +59,7 @@ class WeakSet
     # @!macro weak_set_method_clear
     def clear
       @map = ObjectSpace::WeakMap.new
-      @key_map.clear
+      @key_map = {}
       self
     end
 

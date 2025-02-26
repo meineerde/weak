@@ -199,7 +199,7 @@ class WeakSet
   #   quickly garbage collected again.
   # @yieldparam element [Object] the yielded value from the `enum`
   def initialize(enum = nil)
-    super()
+    clear
 
     return if enum.nil?
     if block_given?

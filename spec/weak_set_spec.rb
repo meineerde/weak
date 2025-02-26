@@ -517,6 +517,8 @@ RSpec.describe WeakSet do
         expect(key_map).not_to be_empty
 
         set.clear
+
+        key_map = set.instance_variable_get(:@key_map)
         expect(key_map).to be_empty
       end
     end
