@@ -50,7 +50,7 @@ class WeakSet
 
     # @!macro weak_set_method_delete_question
     def delete?(obj)
-      # WeakMap#delete returns the vlaue if it was removed. As we set it to
+      # WeakMap#delete returns the value if it was removed. As we set it to
       # true, WeakMap#delete returns either true or nil here.
       self if @map.delete(obj)
     end
