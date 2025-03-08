@@ -150,6 +150,17 @@ module Weak
     #     otherwise
     #   @!macro _note_object_equality
 
+    # @!macro weak_set_method_replace
+    #   Replaces the contents of `self` with the contents of the given
+    #   enumerable object and returns `self`.
+    #
+    #   @param enum (see #do_with_enum)
+    #   @return [self]
+    #   @example
+    #       set = Weak::Set[1, :c, :s]        #=> #<Weak::Set: {1, :c, :s}>
+    #       set.replace([1, 2])               #=> #<Weak::Set: {1, 2}>
+    #       set                               #=> #<Weak::Set: {1, 2}>
+
     # @!macro weak_set_method_size
     #   @return [Integer] the number of live elements in `self`
 
@@ -177,6 +188,9 @@ module Weak
 
     # @!method size
     #   @!macro weak_set_method_size
+
+    # @!method replace(enum)
+    #   @!macro weak_set_method_replace
 
     # @!method to_a
     #   @!macro weak_set_method_to_a
@@ -573,25 +587,6 @@ module Weak
       end
     end
     alias_method :>, :proper_superset?
-
-    # Replaces the contents of `self` with the contents of the given enumerable
-    # object and returns `self`.
-    #
-    # @param enum (see #do_with_enum)
-    # @return [self]
-    # @example
-    #
-    #     set = Weak::Set[1, :c, :s]          #=> #<Weak::Set: {1, :c, :s}>
-    #     set.replace([1, 2])               #=> #<Weak::Set: {1, 2}>
-    #     set                               #=> #<Weak::Set: {1, 2}>
-    def replace(enum)
-      cleared do
-        do_with_enum(enum) do |obj|
-          add(obj)
-        end
-      end
-      self
-    end
 
     # Deletes every live element from `self` for which the given block
     # evaluates to a truethy value.

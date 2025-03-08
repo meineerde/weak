@@ -73,6 +73,17 @@ module Weak
         !!(@map.key?(obj) && @map[obj].equal?(obj))
       end
 
+      # @!macro weak_set_method_replace
+      def replace(enum)
+        map = ObjectSpace::WeakMap.new
+        do_with_enum(enum) do |obj|
+          map[obj] = obj
+        end
+        @map = map
+
+        self
+      end
+
       # @!macro weak_set_method_size
       def size
         count = 0
@@ -85,16 +96,6 @@ module Weak
       # @!macro weak_set_method_to_a
       def to_a
         @map.values.delete_if { |obj| DeletedEntry === obj }
-      end
-
-      private
-
-      def cleared
-        original_map, @map = @map, ObjectSpace::WeakMap.new
-        yield
-      rescue Exception
-        @map = original_map
-        raise
       end
     end
   end

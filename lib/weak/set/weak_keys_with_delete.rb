@@ -64,6 +64,17 @@ module Weak
         @map.key?(obj)
       end
 
+      # @!macro weak_set_method_replace
+      def replace(enum)
+        map = ObjectSpace::WeakMap.new
+        do_with_enum(enum) do |obj|
+          map[obj] = true
+        end
+        @map = map
+
+        self
+      end
+
       # @!macro weak_set_method_size
       def size
         @map.size
@@ -72,16 +83,6 @@ module Weak
       # @!macro weak_set_method_to_a
       def to_a
         @map.keys
-      end
-
-      private
-
-      def cleared
-        original_map, @map = @map, ObjectSpace::WeakMap.new
-        yield
-      rescue Exception
-        @map = original_map
-        raise
       end
     end
   end

@@ -103,6 +103,20 @@ module Weak
         value
       end
 
+      # @!macro weak_set_method_replace
+      def replace(enum)
+        map = ObjectSpace::WeakMap.new
+        key_map = {}
+        do_with_enum(enum) do |obj|
+          key = key_map[obj.__id__] ||= Object.new.freeze
+          map[key] = obj
+        end
+        @map = map
+        @key_map = key_map
+
+        self
+      end
+
       # @!macro weak_set_method_size
       def size
         # Compared to using `ObjectSpace::WeakMap#each_value` like we do in
@@ -116,16 +130,6 @@ module Weak
       end
 
       private
-
-      def cleared
-        original_map, @map = @map, ObjectSpace::WeakMap.new
-        original_key_map, @key_map = @key_map, {}
-        yield
-      rescue Exception
-        @map = original_map
-        @key_map = original_key_map
-        raise
-      end
 
       # GC the `@key_map` if we could remove at least 2000 entries or 20% of the
       # table size (whichever is greater). Since the cost of the GC pass is
