@@ -6,11 +6,11 @@
 # of the MIT license. See the LICENSE.txt file for details.
 
 require "spec_helper"
-require "weak_set/version"
+require "weak/version"
 
-RSpec.describe "WeakSet::VERSION" do
+RSpec.describe "Weak::VERSION" do
   it "is a version number" do
-    expect(WeakSet::VERSION)
+    expect(Weak::VERSION)
       .to be_a(String)
       .and be_frozen
       .and match %r{\A\d+(?:\.\d+)+(?:\.[a-z][a-z0-9_]+)?\z}i

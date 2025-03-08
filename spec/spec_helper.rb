@@ -18,25 +18,25 @@ if ENV["COVERAGE"] == "1"
   end
 
   SimpleCov.start do
-    project_name "WeakSet"
+    project_name "Weak"
     add_filter "/spec/"
   end
 
-  # Load `weak_set/version.rb` again to get proper coverage data. This file is
+  # Load `weak/version.rb` again to get proper coverage data. This file is
   # already loaded by bundler before SimpleCov starts during evaluation of the
-  # the `weak_set.gemspec` file
+  # the `weak.gemspec` file
   begin
     warn_level, $VERBOSE = $VERBOSE, nil
-    load File.expand_path("../lib/weak_set/version.rb", __dir__)
+    load File.expand_path("../lib/weak/version.rb", __dir__)
   ensure
     $VERBOSE = warn_level
   end
 end
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
-require "weak_set"
+require "weak"
 
-class WeakSet
+module Weak
   module RSpecHelpers
     # We sometimes need to use a separate scope to ensure that JRuby and older
     # Rubies do not hold any internal references to objects which would prevent
@@ -50,9 +50,9 @@ class WeakSet
     # avoid cluttering test output when an expectation in a thread is missed, we
     # disable error reporting here.
     #
-    # For actual users of a WeakSet, this shouldn't matter much. Depending on
+    # For actual users of a Weak class, this shouldn't matter much. Depending on
     # their Ruby engine and version, they may just experience delayed garbage
-    # collection of values and thus possible WeakSet elements.
+    # collection of values and thus possible elements of a weak collection.
     #
     # See https://github.com/jruby/jruby/discussions/8640
     def collectable(&block)
@@ -90,8 +90,8 @@ class WeakSet
       end
     end
 
-    def weak_module
-      WeakSet.ancestors.find { |m| m.name.start_with?("WeakSet::") }
+    def weak_set_module
+      Weak::Set.ancestors.find { |m| m.name.start_with?("Weak::Set::") }
     end
   end
 end
@@ -103,7 +103,7 @@ RSpec.configure do |config|
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
 
-  config.include WeakSet::RSpecHelpers
+  config.include Weak::RSpecHelpers
 
   config.expect_with :rspec do |c|
     c.syntax = :expect

@@ -1,67 +1,73 @@
-# WeakSet
+# Weak
 
-[![gem version badge](https://badge.fury.io/rb/weak_set.svg)](https://rubygems.org/gems/weak_set)
-[![CI status badge](https://github.com/meineerde/weak_set/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak_set/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/meineerde/weak_set/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak_set?branch=main)
+[![gem version badge](https://badge.fury.io/rb/weak.svg)](https://rubygems.org/gems/weak)
+[![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/meineerde/weak/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak?branch=main)
 
-WeakSet is a Ruby library which implements a collection of unordered values without strong object references.
+Weak is a Ruby library which implements collections of unordered values without strong object references.
 
-It behaves similar to the [Set](https://docs.ruby-lang.org/en/3.4/Set.html) class of the Ruby standard library, but all values are only weakly referenced. That way, all values can be garbage collected and silently removed from the set unless they are still referenced from some other live object.
+We provide multiple classes which behave similar to their standard-library counterparts. However, all elements are only weakly referenced. That way, all elements can be garbage collected and silently removed from the collection unless they are still referenced from some other live object.
+
+## Weak::Set 
+
+`Weak::Set` behaves similar to the [Set](https://docs.ruby-lang.org/en/3.4/Set.html) class of the Ruby standard library, but all values are only weakly referenced. That way, all values can be garbage collected and silently removed from the set unless they are still referenced from some other live object.
 
 ```ruby
-require "weak_set"
-set = WeakSet.new
+require "weak/set"
+set = Weak::Set.new
 
 set << "some string"
-# => #<WeakSet: {"some string"}>
+# => #<Weak::Set: {"some string"}>
 
 # Do some work, wait a bit, or force a garbage collection run
 3.times { GC.start }
 
 set
-# => #<WeakSet: {}>
+# => #<Weak::Set: {}>
 ```
 
 ## Usage
 
 Please refer to the documentation at:
 
-- [📘 Documentation](https://www.rubydoc.info/gems/weak_set)
-- [💥 Development Documentation](https://www.rubydoc.info/github/meineerde/weak_set/main) of the [main branch](https://github.com/meineerde/weak_set/tree/main)
+- [📘 Documentation](https://www.rubydoc.info/gems/weak)
+- [💥 Development Documentation](https://www.rubydoc.info/github/meineerde/weak/main) of the [main branch](https://github.com/meineerde/weak/tree/main)
 
 > [!WARNING]
-> WeakSet is not inherently thread-safe. When accessing a WeakSet from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
+> The Weak collections are not inherently thread-safe. When accessing a collection from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
 
-WeakSet uses Ruby's [ObjectSpace::WeakMap](https://docs.ruby-lang.org/en/3.4/ObjectSpace/WeakMap.html) under the hood. Unfortunately, different Ruby implementations and versions such as Ruby (aka. MRI, aka. YARV), JRuby, or TruffleRuby show quite diverse behavior in their respective `ObjectSpace::WeakMap` implementations. To provide a unified behavior on all supported Rubies, we use multiple different storage strategies.
+The Weak collections use Ruby's [ObjectSpace::WeakMap](https://docs.ruby-lang.org/en/3.4/ObjectSpace/WeakMap.html) under the hood. Unfortunately, different Ruby implementations and versions such as Ruby (aka. MRI, aka. YARV), JRuby, or TruffleRuby show quite diverse behavior in their respective `ObjectSpace::WeakMap` implementations. To provide a unified behavior on all supported Rubies, we use multiple different storage strategies.
 
-The appropriate strategy is selected automatically. Their exposed behavior should be identical across all implementations. If you experience diverging behavior, we consider this a bug. Please [open an issue](https://github.com/meineerde/weak_set/issues/new) and describe the diverging or unexpected behavior.
+The appropriate strategy is selected automatically. Their exposed behavior should be identical across all implementations. If you experience diverging behavior, we consider this a bug. Please [open an issue](https://github.com/meineerde/weak/issues/new) and describe the diverging or unexpected behavior.
 
 ## Installation
 
-WeakSet supports the following Ruby implementation:
+Weak supports the following Ruby implementation:
 
 - Ruby (aka. MRI, aka. YARV) >= 3.0
 - JRuby >= 9.4
 - TruffleRuby >= 22
 
-Add the `weak_set` gem to the application's `Gemfile` and install it by executing:
+Add the `weak` gem to the application's `Gemfile` and install it by executing:
 
 ```sh
-bundle add weak_set
+bundle add weak
 ```
 
 If [bundler](https://bundler.io/) is not being used to manage dependencies, install the gem manually by executing:
 
 ```sh
-gem install weak_set
+gem install weak
 ```
 
-## Example
+## Examples
 
-A WeakSet can be used as a cache or for validation purposes were it is not desirable to keep a full object reference. For example, it can be used with a basic `ConnectionPool` as follows
+### Weak::Set Example
+
+A Weak::Set can be used as a cache or for validation purposes were it is not desirable to keep a full object reference. For example, it can be used with a basic `ConnectionPool` as follows
 
 ```ruby
-require "weak_set"
+require "weak/set"
 
 class Connection
   # A sample connection class.
@@ -71,7 +77,7 @@ end
 class ConnectionPool
   def initialize
     @pool = []
-    @outstanding = WeakSet.new
+    @outstanding = Weak::Set.new
     @mutex = Mutex.new
   end
 
@@ -131,7 +137,7 @@ We follow the Standard Ruby style. Please make sure that all code is formatted a
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/meineerde/weak_set. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/meineerde/weak_set/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/meineerde/weak. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/meineerde/weak/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -139,4 +145,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the WeakSet project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/meineerde/weak_set/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Weak project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/meineerde/weak/blob/main/CODE_OF_CONDUCT.md).

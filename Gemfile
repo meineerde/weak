@@ -6,7 +6,7 @@
 # of the MIT license. See the LICENSE.txt file for details.
 
 source "https://rubygems.org"
-gemspec name: "weak_set", require: false
+gemspec name: "weak", require: false
 
 ruby34 = Gem::Requirement.new(">= 3.4.0") === Gem.ruby_version
 

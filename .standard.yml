@@ -23,7 +23,7 @@ ignore:
       # Same as above for Lint/BinaryOperatorWithIdenticalOperands
       - RSpec/IdenticalEqualityAssertion
 
-      # We have only a single class to test and refer a lot to this class
-      # Using described_class instead of WeakSet would look *much* uglier and
-      # would not help refactoring at all.
+      # We only have few self-contained classes to test and refer a lot to them.
+      # Using described_class instead of e.g. Weak::Set would look *much* uglier
+      # and would not help refactoring at all.
       - RSpec/DescribedClass

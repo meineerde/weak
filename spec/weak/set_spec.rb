@@ -10,18 +10,18 @@ require "spec_helper"
 require "pp"
 require "set"
 
-RSpec.describe WeakSet do
-  let(:set) { WeakSet.new }
+RSpec.describe Weak::Set do
+  let(:set) { Weak::Set.new }
 
   it "is an Enumerable" do
-    expect(WeakSet).to be < ::Enumerable
+    expect(Weak::Set).to be < ::Enumerable
     expect(::Enumerable.public_instance_methods - set.methods)
       .to be_empty
   end
 
   it "implements most Set methods" do
-    expected_methods = Set.new.methods.sort - [
-      # A WeakSet is generally not used to store strings to be combined.
+    expected_methods = ::Set.new.methods.sort - [
+      # A Weak::Set is generally not used to store strings to be combined.
       :join,
 
       # A weak set is unsuitable for these operations as the mopdified elements
@@ -48,50 +48,50 @@ RSpec.describe WeakSet do
   end
 
   describe ".[]" do
-    it "returns a WeakSet" do
-      expect(WeakSet[1, 2, 3])
-        .to be_a(WeakSet)
+    it "returns a Weak::Set" do
+      expect(Weak::Set[1, 2, 3])
+        .to be_a(Weak::Set)
         .and contain_exactly(1, 2, 3)
     end
 
     it "does not flatten arguments" do
-      expect(WeakSet[].size).to eq 0
-      expect(WeakSet[nil].size).to eq 1
-      expect(WeakSet[[]].size).to eq 1
-      expect(WeakSet[[nil]].size).to eq 1
+      expect(Weak::Set[].size).to eq 0
+      expect(Weak::Set[nil].size).to eq 1
+      expect(Weak::Set[[]].size).to eq 1
+      expect(Weak::Set[[nil]].size).to eq 1
     end
 
     it "ignores duplicate values" do
-      expect(WeakSet[2, 4, 6, 4]).to eq WeakSet[2, 4, 6]
+      expect(Weak::Set[2, 4, 6, 4]).to eq Weak::Set[2, 4, 6]
     end
   end
 
   describe "#initialize" do
     it "creates an empty set" do
-      expect(WeakSet.new).to be_a(WeakSet).and be_empty
+      expect(Weak::Set.new).to be_a(Weak::Set).and be_empty
     end
 
     it "ignores nil" do
-      expect(WeakSet.new(nil)).to be_a(WeakSet).and be_empty
+      expect(Weak::Set.new(nil)).to be_a(Weak::Set).and be_empty
     end
 
     it "merges an enum" do
-      expect(WeakSet.new([])).to be_a(WeakSet).and be_empty
+      expect(Weak::Set.new([])).to be_a(Weak::Set).and be_empty
 
-      expect(WeakSet.new([1, 2])).to be_a(WeakSet).and be_any
-      expect(WeakSet.new("a".."c")).to be_a(WeakSet).and be_any
+      expect(Weak::Set.new([1, 2])).to be_a(Weak::Set).and be_any
+      expect(Weak::Set.new("a".."c")).to be_a(Weak::Set).and be_any
     end
 
     it "raises ArgumentError on invalid arguments" do
-      expect { WeakSet.new(false) }.to raise_error(ArgumentError)
-      expect { WeakSet.new(1) }.to raise_error(ArgumentError)
-      expect { WeakSet.new(1, 2) }.to raise_error(ArgumentError)
+      expect { Weak::Set.new(false) }.to raise_error(ArgumentError)
+      expect { Weak::Set.new(1) }.to raise_error(ArgumentError)
+      expect { Weak::Set.new(1, 2) }.to raise_error(ArgumentError)
     end
 
     it "does not change the argument" do
       ary = [2, 4, 6, 4]
       ary_hash = ary.hash
-      set = WeakSet.new(ary)
+      set = Weak::Set.new(ary)
 
       expect(ary.hash).to eq ary_hash
       ary.clear
@@ -103,47 +103,47 @@ RSpec.describe WeakSet do
     it "accepts a block to modify the enum's arguments" do
       ary = [1, 2, 3]
 
-      expect(WeakSet.new(ary) { |i| i * 2 })
-        .to be_a(WeakSet)
+      expect(Weak::Set.new(ary) { |i| i * 2 })
+        .to be_a(Weak::Set)
         .and contain_exactly(2, 4, 6)
     end
 
     it "ignores a block without an argument" do
-      expect { |b| WeakSet.new(&b) }.not_to yield_control
+      expect { |b| Weak::Set.new(&b) }.not_to yield_control
     end
   end
 
   describe "#|" do
-    let(:set) { WeakSet[:foo] }
+    let(:set) { Weak::Set[:foo] }
 
     it "returns the addition of elements" do
-      expect(set | WeakSet[:bar])
-        .to be_a(WeakSet)
+      expect(set | Weak::Set[:bar])
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo, :bar)
     end
 
     it "keeps existing values" do
-      expect(set | WeakSet[:foo, :bar]).to contain_exactly(:foo, :bar)
+      expect(set | Weak::Set[:foo, :bar]).to contain_exactly(:foo, :bar)
     end
 
     it "allows to use an Array" do
       expect(set | [:bar])
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo, :bar)
     end
 
     it "allows to use an object which responds only to #each" do
       expect(set | enumerable_mock([:bar], :each))
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo, :bar)
     end
 
     it "allows to use an object which responds only to #each_entry" do
       expect(set | enumerable_mock([:bar], :each_entry))
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo, :bar)
     end
@@ -157,42 +157,42 @@ RSpec.describe WeakSet do
 
     it "is aliased to #+" do
       expect(set.method(:+)).to eq set.method(:|)
-      expect(set + WeakSet[:foo, :bar]).to contain_exactly(:foo, :bar)
+      expect(set + Weak::Set[:foo, :bar]).to contain_exactly(:foo, :bar)
     end
 
     it "is aliased to #union" do
       expect(set.method(:union)).to eq set.method(:|)
-      expect(set.union(WeakSet[:foo, :bar])).to contain_exactly(:foo, :bar)
+      expect(set.union(Weak::Set[:foo, :bar])).to contain_exactly(:foo, :bar)
     end
   end
 
   describe "&" do
-    let(:set) { WeakSet[:foo, :bar] }
+    let(:set) { Weak::Set[:foo, :bar] }
 
     it "returns the intersection of elements" do
-      expect(set & WeakSet[:bar, :boing])
-        .to be_a(WeakSet)
+      expect(set & Weak::Set[:bar, :boing])
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:bar)
     end
 
     it "allows to use an Array" do
       expect(set & [:bar, :boing])
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:bar)
     end
 
     it "allows to use an object which responds only to #each" do
       expect(set & enumerable_mock([:bar, :boing], :each))
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:bar)
     end
 
     it "allows to use an object which responds only to #each_entry" do
       expect(set & enumerable_mock([:bar, :boing], :each_entry))
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:bar)
     end
@@ -206,7 +206,7 @@ RSpec.describe WeakSet do
 
     it "is aliased to #intersection" do
       expect(set.method(:intersection)).to eq set.method(:&)
-      expect(set.intersection(WeakSet[:foo, :boing])).to contain_exactly(:foo)
+      expect(set.intersection(Weak::Set[:foo, :boing])).to contain_exactly(:foo)
     end
   end
 
@@ -216,8 +216,8 @@ RSpec.describe WeakSet do
     end
 
     it "returns the subtraction of elements" do
-      expect(set - WeakSet[:foo])
-        .to be_a(WeakSet)
+      expect(set - Weak::Set[:foo])
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:bar)
 
@@ -225,8 +225,8 @@ RSpec.describe WeakSet do
     end
 
     it "ignores non-existing values" do
-      expect(set - WeakSet[:bar, :baz])
-        .to be_a(WeakSet)
+      expect(set - Weak::Set[:bar, :baz])
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo)
 
@@ -235,21 +235,21 @@ RSpec.describe WeakSet do
 
     it "allows to use an Array" do
       expect(set - [:foo])
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:bar)
     end
 
     it "allows to use an object which responds only to #each" do
       expect(set - enumerable_mock([:foo], :each))
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:bar)
     end
 
     it "allows to use an object which responds only to #each_entry" do
       expect(set - enumerable_mock([:foo], :each_entry))
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:bar)
     end
@@ -263,7 +263,7 @@ RSpec.describe WeakSet do
 
     it "is aliased to #difference" do
       expect(set.method(:difference)).to eq set.method(:-)
-      expect(set.difference(WeakSet[:foo])).to contain_exactly(:bar)
+      expect(set.difference(Weak::Set[:foo])).to contain_exactly(:bar)
     end
   end
 
@@ -281,31 +281,31 @@ RSpec.describe WeakSet do
     end
 
     it "checks for proper superset / subset" do
-      expect(set <=> WeakSet[1, 2, 3, 4]).to eq(-1)
-      expect(set <=> WeakSet[3, 2, 1]).to eq 0
-      expect(set <=> WeakSet[2, 3]).to eq 1
-      expect(set <=> WeakSet[]).to eq 1
+      expect(set <=> Weak::Set[1, 2, 3, 4]).to eq(-1)
+      expect(set <=> Weak::Set[3, 2, 1]).to eq 0
+      expect(set <=> Weak::Set[2, 3]).to eq 1
+      expect(set <=> Weak::Set[]).to eq 1
 
-      expect(WeakSet.new <=> WeakSet.new).to eq 0
+      expect(Weak::Set.new <=> Weak::Set.new).to eq 0
     end
 
     it "returns nil when proper subset / sueprset" do
       # overlapping, but not a proper subset / superset
-      expect(set <=> WeakSet[1, 2, 4]).to be_nil
+      expect(set <=> Weak::Set[1, 2, 4]).to be_nil
 
       # no overlap
-      expect(set <=> WeakSet[4, :foo]).to be_nil
+      expect(set <=> Weak::Set[4, :foo]).to be_nil
     end
   end
 
   describe "#==" do
     it "compares sets" do
-      set1 = WeakSet[2, 3, 1]
-      set2 = WeakSet[1, 2, 3]
+      set1 = Weak::Set[2, 3, 1]
+      set2 = Weak::Set[1, 2, 3]
 
       expect(set1).to eq set1
       expect(set1).to eq set2
-      expect(WeakSet[1]).not_to eq [1]
+      expect(Weak::Set[1]).not_to eq [1]
     end
 
     it "checks the class" do
@@ -325,25 +325,25 @@ RSpec.describe WeakSet do
       s2 = +"string"
       expect(s1).not_to equal(s2)
 
-      set1 = WeakSet[s1]
-      set2 = WeakSet[s2]
+      set1 = Weak::Set[s1]
+      set2 = Weak::Set[s2]
       expect(set1).not_to eq set2
     end
 
     it "requires the same number of elements" do
       set << :foo
-      expect(WeakSet[]).not_to eq set
-      expect(set).not_to eq WeakSet[]
+      expect(Weak::Set[]).not_to eq set
+      expect(set).not_to eq Weak::Set[]
     end
   end
 
   describe "#^" do
     it "performs an xor" do
-      set = WeakSet[1, 2, 3, 4]
-      other = WeakSet[2, 4, 5, 5]
+      set = Weak::Set[1, 2, 3, 4]
+      other = Weak::Set[2, 4, 5, 5]
 
       expect(set ^ other)
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and not_equal(other)
         .and contain_exactly(1, 3, 5)
@@ -354,9 +354,9 @@ RSpec.describe WeakSet do
     end
 
     it "treats nil like an empty set" do
-      set = WeakSet[1, 2, 3, 4]
+      set = Weak::Set[1, 2, 3, 4]
       expect(set ^ nil)
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(1, 2, 3, 4)
     end
@@ -366,7 +366,7 @@ RSpec.describe WeakSet do
       s2 = +"string"
       expect(s1).not_to equal(s2)
 
-      expect((WeakSet[:foo, s1] ^ WeakSet[s2, :foo]).map(&:object_id))
+      expect((Weak::Set[:foo, s1] ^ Weak::Set[s2, :foo]).map(&:object_id))
         .to contain_exactly(s1.object_id, s2.object_id)
     end
 
@@ -380,7 +380,7 @@ RSpec.describe WeakSet do
 
         expect(obj).to equal(obj)
 
-        expect(WeakSet[:foo, array.first] ^ WeakSet[array.first, :foo])
+        expect(Weak::Set[:foo, array.first] ^ Weak::Set[array.first, :foo])
           .to have_attributes(
             length: 0,
             to_a: []
@@ -389,11 +389,11 @@ RSpec.describe WeakSet do
     end
 
     it "accepts an Enumerable" do
-      set = WeakSet[1, 2, 3, 4]
+      set = Weak::Set[1, 2, 3, 4]
       other = [2, 4, 5, 5]
 
       expect(set ^ other)
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and contain_exactly(1, 3, 5)
 
       # The original objects are not changed.
@@ -437,7 +437,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#add" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "adds an object" do
       expect { set.add(5) }.to change(set, :size).from(3).to(4)
@@ -455,11 +455,11 @@ RSpec.describe WeakSet do
     end
 
     it "is aliased to :<<" do
-      # This is ore "manual" because Ruby 3.4 distinguishes the method owner,
+      # This is more "manual" because Ruby 3.4 distinguishes the method owner,
       # i.e., the module where the method or alias was defined. In previous
       # Ruby versions, that didn't matter.
       expect(set.method(:<<)).to have_attributes(
-        owner: WeakSet,
+        owner: Weak::Set,
         source_location: set.method(:add).source_location
       )
 
@@ -469,7 +469,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#add?" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "adds an object" do
       expect { set.add?(5) }.to change(set, :size).from(3).to(4)
@@ -510,7 +510,7 @@ RSpec.describe WeakSet do
     end
 
     it "cleans up internal data" do
-      # This is only relevant for WeakSet::StrongSecondaryKeys
+      # This is only relevant for Weak::Set::StrongSecondaryKeys
       key_map = set.instance_variable_get(:@key_map)
       if key_map
         set.merge [1, 2]
@@ -531,7 +531,7 @@ RSpec.describe WeakSet do
 
     it "clones the set" do
       expect(set.clone)
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo)
 
@@ -545,7 +545,7 @@ RSpec.describe WeakSet do
 
     it "allows to use freeze: false" do
       expect(set.clone(freeze: false))
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo)
         .and not_be_frozen
@@ -555,11 +555,11 @@ RSpec.describe WeakSet do
       allow(set).to receive(:warn)
 
       expect(set.clone(freeze: true))
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo)
         .and not_be_frozen
-      expect(set).to have_received(:warn).with("Can't freeze WeakSet")
+      expect(set).to have_received(:warn).with("Can't freeze Weak::Set")
 
       # Instance variables of the clone set won't be frozen either
       expect(set.clone(freeze: true).instance_variables).to all satisfy { |v|
@@ -583,7 +583,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#delete" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "deletes an object" do
       expect(set.delete(3)).to equal(set)
@@ -599,7 +599,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#delete?" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "deletes an object" do
       expect { set.delete?(2) }.to change(set, :size).from(3).to(2)
@@ -656,7 +656,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#delete_if" do
-    let(:set) { WeakSet.new(1..10) }
+    let(:set) { Weak::Set.new(1..10) }
 
     it "deletes element for which the block matches" do
       expect(set.delete_if { |i| i % 3 == 0 })
@@ -684,7 +684,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#disjoint?" do
-    let(:set) { WeakSet[3, 4, 5] }
+    let(:set) { Weak::Set[3, 4, 5] }
 
     it "rejects the same set" do
       expect(set.disjoint?(set)).to be false
@@ -692,45 +692,45 @@ RSpec.describe WeakSet do
     end
 
     it "rejects intersecting sets" do
-      expect(set.disjoint?(WeakSet[2, 4, 6])).to be false
+      expect(set.disjoint?(Weak::Set[2, 4, 6])).to be false
       expect(set.disjoint?([2, 4, 6])).to be false
-      expect(WeakSet[2, 4, 6].disjoint?(set)).to be false
+      expect(Weak::Set[2, 4, 6].disjoint?(set)).to be false
 
-      expect(set.disjoint?(WeakSet[2, 4])).to be false
+      expect(set.disjoint?(Weak::Set[2, 4])).to be false
       expect(set.disjoint?([2, 4])).to be false
-      expect(WeakSet[2, 4].disjoint?(set)).to be false
+      expect(Weak::Set[2, 4].disjoint?(set)).to be false
 
-      expect(set.disjoint?(WeakSet[5, 6, 7])).to be false
+      expect(set.disjoint?(Weak::Set[5, 6, 7])).to be false
       expect(set.disjoint?([5, 6, 7])).to be false
-      expect(WeakSet[5, 6, 7].disjoint?(set)).to be false
+      expect(Weak::Set[5, 6, 7].disjoint?(set)).to be false
 
-      expect(set.disjoint?(WeakSet[1, 2, 6, 8, 4])).to be false
+      expect(set.disjoint?(Weak::Set[1, 2, 6, 8, 4])).to be false
       expect(set.disjoint?([1, 2, 6, 8, 4])).to be false
-      expect(WeakSet[1, 2, 6, 8, 4].disjoint?(set)).to be false
+      expect(Weak::Set[1, 2, 6, 8, 4].disjoint?(set)).to be false
 
       # Make sure set hasn't changed
-      expect(set).to eq WeakSet[3, 4, 5]
+      expect(set).to eq Weak::Set[3, 4, 5]
     end
 
     it "accepts disjoint sets" do
-      expect(set.disjoint?(WeakSet[])).to be true
+      expect(set.disjoint?(Weak::Set[])).to be true
       expect(set.disjoint?([])).to be true
-      expect(WeakSet[].disjoint?(set)).to be true
+      expect(Weak::Set[].disjoint?(set)).to be true
 
-      expect(set.disjoint?(WeakSet[0, 2])).to be true
+      expect(set.disjoint?(Weak::Set[0, 2])).to be true
       expect(set.disjoint?([0, 2])).to be true
-      expect(WeakSet[0, 2].disjoint?(set)).to be true
+      expect(Weak::Set[0, 2].disjoint?(set)).to be true
 
-      expect(set.disjoint?(WeakSet[0, 2, 6])).to be true
+      expect(set.disjoint?(Weak::Set[0, 2, 6])).to be true
       expect(set.disjoint?([0, 2, 6])).to be true
-      expect(WeakSet[0, 2, 6].disjoint?(set)).to be true
+      expect(Weak::Set[0, 2, 6].disjoint?(set)).to be true
 
-      expect(set.disjoint?(WeakSet[0, 2, 6, 8, 10])).to be true
+      expect(set.disjoint?(Weak::Set[0, 2, 6, 8, 10])).to be true
       expect(set.disjoint?([0, 2, 6, 8, 10])).to be true
-      expect(WeakSet[0, 2, 6, 8, 10].disjoint?(set)).to be true
+      expect(Weak::Set[0, 2, 6, 8, 10].disjoint?(set)).to be true
 
       # Make sure set hasn't changed
-      expect(set).to eq WeakSet[3, 4, 5]
+      expect(set).to eq Weak::Set[3, 4, 5]
     end
 
     it "accepts any Enumerable" do
@@ -754,7 +754,7 @@ RSpec.describe WeakSet do
 
     it "duplicates the set" do
       expect(set.dup)
-        .to be_a(WeakSet)
+        .to be_a(Weak::Set)
         .and not_equal(set)
         .and contain_exactly(:foo)
 
@@ -767,7 +767,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#each" do
-    let(:set) { WeakSet[1, 3, 5, 7, 10, 20] }
+    let(:set) { Weak::Set[1, 3, 5, 7, 10, 20] }
 
     it "returns self" do
       expect(set.each {}).to equal set
@@ -801,11 +801,11 @@ RSpec.describe WeakSet do
 
   describe "#empty?" do
     it "returns false for a populated set" do
-      expect(WeakSet[1, 2].empty?).to be false
+      expect(Weak::Set[1, 2].empty?).to be false
     end
 
     it "returns true for an empty set" do
-      expect(WeakSet[].empty?).to be true
+      expect(Weak::Set[].empty?).to be true
     end
 
     it "returns true as elements are garbage collected" do
@@ -826,11 +826,11 @@ RSpec.describe WeakSet do
     end
 
     it "returns false on different sets" do
-      expect(set).not_to eql WeakSet[]
+      expect(set).not_to eql Weak::Set[]
 
-      expect(WeakSet[:a, :b]).not_to eql WeakSet[:a, :b]
-      expect(WeakSet[1, :b]).not_to eql WeakSet[:a, :b]
-      expect(WeakSet[1, 2]).not_to eql WeakSet[:a, :b]
+      expect(Weak::Set[:a, :b]).not_to eql Weak::Set[:a, :b]
+      expect(Weak::Set[1, :b]).not_to eql Weak::Set[:a, :b]
+      expect(Weak::Set[1, 2]).not_to eql Weak::Set[:a, :b]
     end
   end
 
@@ -852,9 +852,9 @@ RSpec.describe WeakSet do
       }
     end
 
-    it "warns that we can not freeze a WeakSet" do
+    it "warns that we can not freeze a Weak::Set" do
       set.freeze
-      expect(set).to have_received(:warn).with("Can't freeze WeakSet")
+      expect(set).to have_received(:warn).with("Can't freeze Weak::Set")
     end
   end
 
@@ -864,11 +864,11 @@ RSpec.describe WeakSet do
     end
 
     it "returns false on different sets" do
-      expect(set.hash).not_to eq WeakSet.new.hash
+      expect(set.hash).not_to eq Weak::Set.new.hash
 
-      expect(WeakSet[:a, :b].hash).not_to eql WeakSet[:a, :b].hash
-      expect(WeakSet[1, :b].hash).not_to eql WeakSet[:a, :b].hash
-      expect(WeakSet[1, 2].hash).not_to eql WeakSet[:a, :b].hash
+      expect(Weak::Set[:a, :b].hash).not_to eql Weak::Set[:a, :b].hash
+      expect(Weak::Set[1, :b].hash).not_to eql Weak::Set[:a, :b].hash
+      expect(Weak::Set[1, 2].hash).not_to eql Weak::Set[:a, :b].hash
     end
   end
 
@@ -882,7 +882,7 @@ RSpec.describe WeakSet do
       expect(set.include?(0)).to be false
       expect(set.include?(nil)).to be false
 
-      set = WeakSet[:a, nil, :b, nil, :c, :d, false]
+      set = Weak::Set[:a, nil, :b, nil, :c, :d, false]
       expect(set.include?(nil)).to be true
       expect(set.include?(false)).to be true
       expect(set.include?(:a)).to be true
@@ -900,8 +900,8 @@ RSpec.describe WeakSet do
       expect(set.include?(string2)).to be false
     end
 
-    it "garbage collects @key_map for WeakSet::StrongSecondaryKeys" do
-      if weak_module.name == "WeakSet::StrongSecondaryKeys"
+    it "garbage collects @key_map for Weak::Set::StrongSecondaryKeys" do
+      if weak_set_module.name == "Weak::Set::StrongSecondaryKeys"
         collectable do
           numbers = (1..5000).map(&:to_s)
           numbers.each do |n|
@@ -925,11 +925,11 @@ RSpec.describe WeakSet do
     end
 
     it "is aliased to #===" do
-      # This is ore "manual" because Ruby 3.4 distinguishes the method owner,
+      # This is more "manual" because Ruby 3.4 distinguishes the method owner,
       # i.e., the module where the method or alias was defined. In previous
       # Ruby versions, that didn't matter.
       expect(set.method(:===)).to have_attributes(
-        owner: WeakSet,
+        owner: Weak::Set,
         source_location: set.method(:include?).source_location
       )
 
@@ -939,11 +939,11 @@ RSpec.describe WeakSet do
     end
 
     it "is aliased to #member?" do
-      # This is ore "manual" because Ruby 3.4 distinguishes the method owner,
+      # This is more "manual" because Ruby 3.4 distinguishes the method owner,
       # i.e., the module where the method or alias was defined. In previous
       # Ruby versions, that didn't matter.
       expect(set.method(:member?)).to have_attributes(
-        owner: WeakSet,
+        owner: Weak::Set,
         source_location: set.method(:include?).source_location
       )
 
@@ -954,26 +954,26 @@ RSpec.describe WeakSet do
   end
 
   describe "#inspect" do
-    let(:set) { WeakSet[1, 2] }
-    let(:set2) { WeakSet[WeakSet[0], 1, 2, set] }
+    let(:set) { Weak::Set[1, 2] }
+    let(:set2) { Weak::Set[Weak::Set[0], 1, 2, set] }
 
     it "shows details" do
-      expect(set.inspect).to eq "#<WeakSet: {1, 2}>"
+      expect(set.inspect).to eq "#<Weak::Set: {1, 2}>"
     end
 
     it "inspects nested sets" do
-      expect(set2.inspect).to eq "#<WeakSet: {1, 2, #<WeakSet: {0}>, #<WeakSet: {1, 2}>}>"
+      expect(set2.inspect).to eq "#<Weak::Set: {1, 2, #<Weak::Set: {0}>, #<Weak::Set: {1, 2}>}>"
     end
 
     it "handles infinite recursion" do
       set.add(set2)
       expect(set2.inspect)
-        .to eq "#<WeakSet: {1, 2, #<WeakSet: {0}>, #<WeakSet: {1, 2, #<WeakSet: {...}>}>}>"
+        .to eq "#<Weak::Set: {1, 2, #<Weak::Set: {0}>, #<Weak::Set: {1, 2, #<Weak::Set: {...}>}>}>"
     end
 
     it "is aliased to #to_s" do
       expect(set.method(:to_s)).to eq set.method(:inspect)
-      expect(set.to_s).to eq "#<WeakSet: {1, 2}>"
+      expect(set.to_s).to eq "#<Weak::Set: {1, 2}>"
     end
 
     it "does not swallow nested exceptions" do
@@ -989,7 +989,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#intersect?" do
-    let(:set) { WeakSet[3, 4, 5] }
+    let(:set) { Weak::Set[3, 4, 5] }
 
     it "accepts the same set" do
       expect(set.intersect?(set)).to be true
@@ -997,45 +997,45 @@ RSpec.describe WeakSet do
     end
 
     it "accepts intersecting sets" do
-      expect(set.intersect?(WeakSet[2, 4, 6])).to be true
+      expect(set.intersect?(Weak::Set[2, 4, 6])).to be true
       expect(set.intersect?([2, 4, 6])).to be true
-      expect(WeakSet[2, 4, 6].intersect?(set)).to be true
+      expect(Weak::Set[2, 4, 6].intersect?(set)).to be true
 
-      expect(set.intersect?(WeakSet[2, 4])).to be true
+      expect(set.intersect?(Weak::Set[2, 4])).to be true
       expect(set.intersect?([2, 4])).to be true
-      expect(WeakSet[2, 4].intersect?(set)).to be true
+      expect(Weak::Set[2, 4].intersect?(set)).to be true
 
-      expect(set.intersect?(WeakSet[5, 6, 7])).to be true
+      expect(set.intersect?(Weak::Set[5, 6, 7])).to be true
       expect(set.intersect?([5, 6, 7])).to be true
-      expect(WeakSet[5, 6, 7].intersect?(set)).to be true
+      expect(Weak::Set[5, 6, 7].intersect?(set)).to be true
 
-      expect(set.intersect?(WeakSet[1, 2, 6, 8, 4])).to be true
+      expect(set.intersect?(Weak::Set[1, 2, 6, 8, 4])).to be true
       expect(set.intersect?([1, 2, 6, 8, 4])).to be true
-      expect(WeakSet[1, 2, 6, 8, 4].intersect?(set)).to be true
+      expect(Weak::Set[1, 2, 6, 8, 4].intersect?(set)).to be true
 
       # Make sure set hasn't changed
-      expect(set).to eq WeakSet[3, 4, 5]
+      expect(set).to eq Weak::Set[3, 4, 5]
     end
 
     it "rejects disjoint sets" do
-      expect(set.intersect?(WeakSet[])).to be false
+      expect(set.intersect?(Weak::Set[])).to be false
       expect(set.intersect?([])).to be false
-      expect(WeakSet[].intersect?(set)).to be false
+      expect(Weak::Set[].intersect?(set)).to be false
 
-      expect(set.intersect?(WeakSet[0, 2])).to be false
+      expect(set.intersect?(Weak::Set[0, 2])).to be false
       expect(set.intersect?([0, 2])).to be false
-      expect(WeakSet[0, 2].intersect?(set)).to be false
+      expect(Weak::Set[0, 2].intersect?(set)).to be false
 
-      expect(set.intersect?(WeakSet[0, 2, 6])).to be false
+      expect(set.intersect?(Weak::Set[0, 2, 6])).to be false
       expect(set.intersect?([0, 2, 6])).to be false
-      expect(WeakSet[0, 2, 6].intersect?(set)).to be false
+      expect(Weak::Set[0, 2, 6].intersect?(set)).to be false
 
-      expect(set.intersect?(WeakSet[0, 2, 6, 8, 10])).to be false
+      expect(set.intersect?(Weak::Set[0, 2, 6, 8, 10])).to be false
       expect(set.intersect?([0, 2, 6, 8, 10])).to be false
-      expect(WeakSet[0, 2, 6, 8, 10].intersect?(set)).to be false
+      expect(Weak::Set[0, 2, 6, 8, 10].intersect?(set)).to be false
 
       # Make sure set hasn't changed
-      expect(set).to eq WeakSet[3, 4, 5]
+      expect(set).to eq Weak::Set[3, 4, 5]
     end
 
     it "accepts any Enumerable" do
@@ -1053,7 +1053,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#keep_if" do
-    let(:set) { WeakSet.new(1..10) }
+    let(:set) { Weak::Set.new(1..10) }
 
     it "keeps all elements for which the block matches" do
       expect(set.keep_if { |i| i <= 10 })
@@ -1087,17 +1087,17 @@ RSpec.describe WeakSet do
   end
 
   describe "#pretty_print" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "pretty prints wide" do
       expect(set).to receive(:pretty_print).with(PP).and_call_original
-      expect(PP.pp(set, +"", 80)).to eq "#<WeakSet: {1, 2, 3}>\n"
+      expect(PP.pp(set, +"", 80)).to eq "#<Weak::Set: {1, 2, 3}>\n"
     end
 
     it "pretty prints medium wide" do
       expect(set).to receive(:pretty_print).with(PP).and_call_original
       expect(PP.pp(set, +"", 12)).to eq <<~PP
-        #<WeakSet:
+        #<Weak::Set:
          {1, 2, 3}>
       PP
     end
@@ -1105,7 +1105,7 @@ RSpec.describe WeakSet do
     it "pretty prints narrow" do
       expect(set).to receive(:pretty_print).with(PP).and_call_original
       expect(PP.pp(set, +"", 2)).to eq <<~PP
-        #<WeakSet:
+        #<Weak::Set:
          {1,
           2,
           3}>
@@ -1115,34 +1115,34 @@ RSpec.describe WeakSet do
 
   describe "#pretty_print_cycle" do
     let(:set) {
-      set = WeakSet[1, 2, 3]
+      set = Weak::Set[1, 2, 3]
       set << set
     }
 
     it "pretty prints nested sets" do
       expect(set).to receive(:pretty_print_cycle).with(PP).and_call_original
       expect(PP.pp(set, +"", 12)).to eq <<~PP
-        #<WeakSet:
+        #<Weak::Set:
          {1,
           2,
           3,
-          #<WeakSet: {...}>}>
+          #<Weak::Set: {...}>}>
       PP
     end
   end
 
   describe "#proper_subset?" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "compares sets" do
-      expect(set.proper_subset?(WeakSet[1, 2, 3])).to be false
-      expect(set.proper_subset?(WeakSet[1, 2, 3, 4])).to be true
-      expect(set.proper_subset?(WeakSet[1, 2])).to be false
+      expect(set.proper_subset?(Weak::Set[1, 2, 3])).to be false
+      expect(set.proper_subset?(Weak::Set[1, 2, 3, 4])).to be true
+      expect(set.proper_subset?(Weak::Set[1, 2])).to be false
 
-      expect(set.proper_subset?(WeakSet[1, 2, 5])).to be false
-      expect(set.proper_subset?(WeakSet[:foo, :bar, :baz])).to be false
+      expect(set.proper_subset?(Weak::Set[1, 2, 5])).to be false
+      expect(set.proper_subset?(Weak::Set[:foo, :bar, :baz])).to be false
 
-      expect(WeakSet[].proper_subset?(WeakSet[])).to be false
+      expect(Weak::Set[].proper_subset?(Weak::Set[])).to be false
     end
 
     it "raises ArgumentError on invalid arguments" do
@@ -1154,25 +1154,25 @@ RSpec.describe WeakSet do
     it "is aliased to #<" do
       expect(set.method(:<)).to eq set.method(:proper_subset?)
 
-      expect(set < WeakSet[1, 2, 3]).to be false
-      expect(set < WeakSet[1, 2, 3, 4]).to be true
-      expect(set < WeakSet[1, 2]).to be false
-      expect(set < WeakSet[1, 2, 5]).to be false
+      expect(set < Weak::Set[1, 2, 3]).to be false
+      expect(set < Weak::Set[1, 2, 3, 4]).to be true
+      expect(set < Weak::Set[1, 2]).to be false
+      expect(set < Weak::Set[1, 2, 5]).to be false
     end
   end
 
   describe "#proper_superset?" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "compares sets" do
-      expect(set.proper_superset?(WeakSet[1, 2, 3])).to be false
-      expect(set.proper_superset?(WeakSet[1, 2])).to be true
-      expect(set.proper_superset?(WeakSet[1, 2, 3, 4])).to be false
+      expect(set.proper_superset?(Weak::Set[1, 2, 3])).to be false
+      expect(set.proper_superset?(Weak::Set[1, 2])).to be true
+      expect(set.proper_superset?(Weak::Set[1, 2, 3, 4])).to be false
 
-      expect(set.proper_superset?(WeakSet[1, 2, 5])).to be false
-      expect(set.proper_superset?(WeakSet[:foo, :bar, :baz])).to be false
+      expect(set.proper_superset?(Weak::Set[1, 2, 5])).to be false
+      expect(set.proper_superset?(Weak::Set[:foo, :bar, :baz])).to be false
 
-      expect(WeakSet[].proper_superset?(WeakSet[])).to be false
+      expect(Weak::Set[].proper_superset?(Weak::Set[])).to be false
     end
 
     it "raises ArgumentError on invalid arguments" do
@@ -1184,15 +1184,15 @@ RSpec.describe WeakSet do
     it "is aliased to #>" do
       expect(set.method(:>)).to eq set.method(:proper_superset?)
 
-      expect(set > WeakSet[1, 2, 3]).to be false
-      expect(set > WeakSet[1, 2]).to be true
-      expect(set > WeakSet[1, 2, 3, 4]).to be false
-      expect(set > WeakSet[1, 2, 5]).to be false
+      expect(set > Weak::Set[1, 2, 3]).to be false
+      expect(set > Weak::Set[1, 2]).to be true
+      expect(set > Weak::Set[1, 2, 3, 4]).to be false
+      expect(set > Weak::Set[1, 2, 5]).to be false
     end
   end
 
   describe "#reject!" do
-    let(:set) { WeakSet.new(1..10) }
+    let(:set) { Weak::Set.new(1..10) }
 
     it "deletes element for which the block matches" do
       expect(set.reject! { |i| i % 3 == 0 })
@@ -1247,13 +1247,13 @@ RSpec.describe WeakSet do
     end
 
     it "cleans up internal data" do
-      # This is only relevant for WeakSet::StrongSecondaryKeys
+      # This is only relevant for Weak::Set::StrongSecondaryKeys
       key_map = set.instance_variable_get(:@key_map)
       if key_map
         set.merge [1, 2]
         expect(key_map.size).to eq 2
 
-        set.replace(WeakSet[:a, :b, :c, :d])
+        set.replace(Weak::Set[:a, :b, :c, :d])
 
         # the original @key_map is replaced by a new object
         new_key_map = set.instance_variable_get(:@key_map)
@@ -1264,7 +1264,7 @@ RSpec.describe WeakSet do
   end
 
   describe "#select!" do
-    let(:set) { WeakSet.new(1..10) }
+    let(:set) { Weak::Set.new(1..10) }
 
     it "returns nil if nothing was changed" do
       expect(set.select! { |i| i <= 10 }).to be_nil
@@ -1308,9 +1308,9 @@ RSpec.describe WeakSet do
 
   describe "#size" do
     it "returns the number of elements in the set" do
-      expect(WeakSet[].size).to eq 0
-      expect(WeakSet[1, 2].size).to eq 2
-      expect(WeakSet[1, 2, 1].size).to eq 2
+      expect(Weak::Set[].size).to eq 0
+      expect(Weak::Set[1, 2].size).to eq 2
+      expect(Weak::Set[1, 2, 1].size).to eq 2
     end
 
     it "decreses when deleting elements" do
@@ -1332,11 +1332,11 @@ RSpec.describe WeakSet do
     end
 
     it "is aliased to #length" do
-      # This is ore "manual" because Ruby 3.4 distinguishes the method owner,
+      # This is more "manual" because Ruby 3.4 distinguishes the method owner,
       # i.e., the module where the method or alias was defined. In previous
       # Ruby versions, that didn't matter.
       expect(set.method(:length)).to have_attributes(
-        owner: WeakSet,
+        owner: Weak::Set,
         source_location: set.method(:size).source_location
       )
 
@@ -1345,17 +1345,17 @@ RSpec.describe WeakSet do
   end
 
   describe "#subset?" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "compares" do
-      expect(set.subset?(WeakSet[1, 2, 3])).to be true
-      expect(set.subset?(WeakSet[1, 2, 3, 4])).to be true
-      expect(set.subset?(WeakSet[1, 2])).to be false
+      expect(set.subset?(Weak::Set[1, 2, 3])).to be true
+      expect(set.subset?(Weak::Set[1, 2, 3, 4])).to be true
+      expect(set.subset?(Weak::Set[1, 2])).to be false
 
-      expect(set.subset?(WeakSet[1, 2, 5])).to be false
-      expect(set.subset?(WeakSet[:foo, :bar, :baz])).to be false
+      expect(set.subset?(Weak::Set[1, 2, 5])).to be false
+      expect(set.subset?(Weak::Set[:foo, :bar, :baz])).to be false
 
-      expect(WeakSet[].subset?(WeakSet[])).to be true
+      expect(Weak::Set[].subset?(Weak::Set[])).to be true
     end
 
     it "raises ArgumentError on invalid arguments" do
@@ -1367,15 +1367,15 @@ RSpec.describe WeakSet do
     it "is aliased to #<=" do
       expect(set.method(:<=)).to eq set.method(:subset?)
 
-      expect(set <= WeakSet[1, 2, 3]).to be true
-      expect(set <= WeakSet[1, 2, 3, 4]).to be true
-      expect(set <= WeakSet[1, 2]).to be false
-      expect(set <= WeakSet[1, 2, 5]).to be false
+      expect(set <= Weak::Set[1, 2, 3]).to be true
+      expect(set <= Weak::Set[1, 2, 3, 4]).to be true
+      expect(set <= Weak::Set[1, 2]).to be false
+      expect(set <= Weak::Set[1, 2, 5]).to be false
     end
   end
 
   describe "#subtract" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "removes elements" do
       expect(set.subtract([2, 4, 6]))
@@ -1392,17 +1392,17 @@ RSpec.describe WeakSet do
   end
 
   describe "#superset?" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "compares" do
-      expect(set.superset?(WeakSet[1, 2, 3])).to be true
-      expect(set.superset?(WeakSet[1, 2])).to be true
-      expect(set.superset?(WeakSet[1, 2, 3, 4])).to be false
+      expect(set.superset?(Weak::Set[1, 2, 3])).to be true
+      expect(set.superset?(Weak::Set[1, 2])).to be true
+      expect(set.superset?(Weak::Set[1, 2, 3, 4])).to be false
 
-      expect(set.superset?(WeakSet[1, 2, 5])).to be false
-      expect(set.superset?(WeakSet[:foo, :bar, :baz])).to be false
+      expect(set.superset?(Weak::Set[1, 2, 5])).to be false
+      expect(set.superset?(Weak::Set[:foo, :bar, :baz])).to be false
 
-      expect(WeakSet[].superset?(WeakSet[])).to be true
+      expect(Weak::Set[].superset?(Weak::Set[])).to be true
     end
 
     it "raises ArgumentError on invalid arguments" do
@@ -1414,16 +1414,16 @@ RSpec.describe WeakSet do
     it "is aliased to #>=" do
       expect(set.method(:>=)).to eq set.method(:superset?)
 
-      expect(set >= WeakSet[1, 2, 3]).to be true
-      expect(set >= WeakSet[1, 2]).to be true
-      expect(set >= WeakSet[1, 2, 3, 4]).to be false
-      expect(set >= WeakSet[1, 2, 5]).to be false
+      expect(set >= Weak::Set[1, 2, 3]).to be true
+      expect(set >= Weak::Set[1, 2]).to be true
+      expect(set >= Weak::Set[1, 2, 3, 4]).to be false
+      expect(set >= Weak::Set[1, 2, 5]).to be false
     end
   end
 
   describe "#to_a" do
     it "returns an Array of elements" do
-      set = WeakSet[1, 2, 3, 2]
+      set = Weak::Set[1, 2, 3, 2]
       expect(set.to_a)
         .to be_instance_of(Array)
         .and contain_exactly(1, 2, 3)
@@ -1451,10 +1451,10 @@ RSpec.describe WeakSet do
   end
 
   describe "#to_set" do
-    let(:set) { WeakSet[1, 2, 3] }
+    let(:set) { Weak::Set[1, 2, 3] }
 
     it "returns a Set" do
-      expect(set.to_set).to be_a(Set).and contain_exactly(1, 2, 3)
+      expect(set.to_set).to be_a(::Set).and contain_exactly(1, 2, 3)
     end
 
     it "returns Set with compare_by_identity" do
@@ -1462,7 +1462,7 @@ RSpec.describe WeakSet do
       set << s2 = +"string"
       s3 = +"string"
 
-      expect(set.to_set).to be_a(Set).and be_compare_by_identity
+      expect(set.to_set).to be_a(::Set).and be_compare_by_identity
       expect(set.to_set.map(&:object_id))
         .to contain_exactly(3, 5, 7, s1.object_id, s2.object_id)
       expect(set.to_set.include?(s3)).to be false
