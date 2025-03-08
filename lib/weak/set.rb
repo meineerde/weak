@@ -150,6 +150,13 @@ module Weak
     #     otherwise
     #   @!macro _note_object_equality
 
+    # @!macro weak_set_method_prune
+    #   Cleanup data structures from the set to remove data associated with
+    #   deleted or garbage collected elements. This method may be called
+    #   automatically for some {Weak::Set} operations.
+    #
+    #   @return [self]
+
     # @!macro weak_set_method_replace
     #   Replaces the contents of `self` with the contents of the given
     #   enumerable object and returns `self`.
@@ -185,6 +192,9 @@ module Weak
 
     # @!method include?(obj)
     #   @!macro weak_set_method_include_question
+
+    # @!method prune
+    #   @!macro weak_set_method_prune
 
     # @!method size
     #   @!macro weak_set_method_size
@@ -238,6 +248,7 @@ module Weak
     alias_method :===, :include?
     alias_method :member?, :include?
     alias_method :length, :size
+    alias_method :reset, :prune
 
     # @param enum (see #do_with_enum)
     # @return [Weak::Set] a new weak set built by merging `self` and the elements

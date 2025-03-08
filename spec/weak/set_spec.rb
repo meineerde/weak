@@ -1191,6 +1191,42 @@ RSpec.describe Weak::Set do
     end
   end
 
+  describe "#prune" do
+    it "returns self" do
+      expect(set.prune).to equal set
+    end
+
+    it "garbage collects @key_map for Weak::Set::StrongSecondaryKeys" do
+      if weak_set_module.name == "Weak::Set::StrongSecondaryKeys"
+        collectable do
+          set << +"1"
+
+          expect(set.instance_variable_get(:@map).size).to eq 1
+          expect(set.instance_variable_get(:@key_map).size).to eq 1
+        end
+
+        garbage_collect_until do
+          expect(set.instance_variable_get(:@map).size).to eq 0
+        end
+
+        expect(set.instance_variable_get(:@key_map).size).to eq 1
+        set.prune
+        expect(set.instance_variable_get(:@key_map).size).to eq 0
+      end
+    end
+
+    it "is aliased to #reset" do
+      # This is more "manual" because Ruby 3.4 distinguishes the method owner,
+      # i.e., the module where the method or alias was defined. In previous
+      # Ruby versions, that didn't matter.
+      expect(set.method(:reset)).to have_attributes(
+        owner: Weak::Set,
+        source_location: set.method(:prune).source_location
+      )
+      expect(set.reset).to equal set
+    end
+  end
+
   describe "#reject!" do
     let(:set) { Weak::Set.new(1..10) }
 

@@ -89,6 +89,11 @@ module Weak
         !!(@map.key?(key) && @map[key].equal?(obj))
       end
 
+      # @!macro weak_set_method_prune
+      def prune
+        self
+      end
+
       # @!macro weak_set_method_replace
       def replace(enum)
         map = ObjectSpace::WeakMap.new
