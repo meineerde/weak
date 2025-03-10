@@ -1475,7 +1475,7 @@ RSpec.describe Weak::Set do
 
     it "skips garbage-collected entries" do
       collectable do
-        set << (string = +"foo") # standard:disable Lint/UselessAssignment
+        set << (string = +"foo")
         expect(set).to include(string)
         expect(set).not_to be_empty
       end
