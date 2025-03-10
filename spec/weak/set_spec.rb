@@ -79,7 +79,7 @@ RSpec.describe Weak::Set do
       expect(Weak::Set.new([])).to be_a(Weak::Set).and be_empty
 
       expect(Weak::Set.new([1, 2])).to be_a(Weak::Set).and be_any
-      expect(Weak::Set.new("a".."c")).to be_a(Weak::Set).and be_any
+      expect(Weak::Set.new(:a..:c)).to be_a(Weak::Set).and be_any
     end
 
     it "raises ArgumentError on invalid arguments" do
