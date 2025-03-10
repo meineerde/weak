@@ -1470,7 +1470,7 @@ RSpec.describe Weak::Set do
       expect(set.to_a).to include(string)
 
       set.delete(string)
-      expect(set).to be_empty
+      expect(set.to_a).to be_empty
     end
 
     it "skips garbage-collected entries" do
