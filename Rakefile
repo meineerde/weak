@@ -19,14 +19,6 @@ end
 default_tasks = []
 
 begin
-  require "standard/rake"
-rescue LoadError
-  # standard is not available, likely `bundle --without test`
-else
-  default_tasks << :standard
-end
-
-begin
   require "rspec/core/rake_task"
 rescue LoadError
   # rspec is not available, likely `bundle --without test`
@@ -36,6 +28,14 @@ else
   end
 
   default_tasks << :spec
+end
+
+begin
+  require "standard/rake"
+rescue LoadError
+  # standard is not available, likely `bundle --without test`
+else
+  default_tasks << :standard
 end
 
 task default: default_tasks
