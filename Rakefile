@@ -24,7 +24,10 @@ rescue LoadError
   # rspec is not available, likely `bundle --without test`
 else
   RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = %w[--format documentation]
+    t.rspec_opts = %w[
+      --format documentation
+      --order rand
+    ]
   end
 
   default_tasks << :spec
