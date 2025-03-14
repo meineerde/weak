@@ -252,6 +252,28 @@ RSpec.describe Weak::Map do
       end
     end
 
+    it "skips garbage-collected keys" do
+      next unless strategy?("StrongKeys", "StrongSecondaryKeys")
+
+      key_id = nil
+
+      collectable do
+        key1 = Object.new
+        key_id = key1.__id__
+
+        map[key1] = 5
+        expect(map[key1]).to eq 5
+      end
+
+      garbage_collect_until do
+        expect(map).to be_empty
+      end
+
+      key2 = Object.new
+      key2.define_singleton_method(:__id__) { key_id }
+      expect(map[key2]).to be_nil
+    end
+
     it "auto prunes with missing key" do
       expect_prune_on do |map|
         expect(map[:missing]).to be_nil
