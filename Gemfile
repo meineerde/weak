@@ -25,7 +25,9 @@ group :test do
   gem "rspec", "~> 3.0", require: false
 
   gem "standard", "~> 1.45", require: false
-  gem "rubocop-rspec", require: false
+  # rubocop-rspec pinned until standardrb compatibility is restored
+  # https://github.com/standardrb/standard/issues/701
+  gem "rubocop-rspec", "~> 3.4.0 ", require: false
 
   gem "simplecov", require: false
   gem "coveralls_reborn", require: false
