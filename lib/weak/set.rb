@@ -61,7 +61,7 @@ module Weak
   #   versions with strong keys and weak values. However generally in JRuby,
   #   Integer values (including object_ids) can have multiple different object
   #   representations in memory and are not necessarily equal to each other when
-  #    used as keys in an `ObjectSpace::WeakMap`. As a workaround we use an
+  #   used as keys in an `ObjectSpace::WeakMap`. As a workaround we use an
   #   indirect implementation with a secondary lookup table for the keys in
   #   {Weak::Set::StrongSecondaryKeys}.
   #
