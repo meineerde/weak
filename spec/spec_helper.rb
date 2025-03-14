@@ -89,10 +89,6 @@ module Weak
         raise if now - started > timeout
       end
     end
-
-    def weak_set_module
-      Weak::Set.ancestors.find { |m| m.name.start_with?("Weak::Set::") }
-    end
   end
 end
 

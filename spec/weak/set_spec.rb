@@ -11,6 +11,12 @@ require "pp"
 require "set"
 
 RSpec.describe Weak::Set do
+  def strategy?(*strategies)
+    strategies = strategies.map { |strategy| "Weak::Set::#{strategy}" }
+
+    Weak::Set.ancestors.any? { |mod| strategies.include?(mod.name) }
+  end
+
   let(:set) { Weak::Set.new }
 
   it "is an Enumerable" do
@@ -510,16 +516,18 @@ RSpec.describe Weak::Set do
     end
 
     it "cleans up internal data" do
-      # This is only relevant for Weak::Set::StrongSecondaryKeys
-      key_map = set.instance_variable_get(:@key_map)
-      if key_map
-        set.merge [1, 2]
-        expect(key_map).not_to be_empty
+      set.merge [1, 2]
 
+      if strategy?("StrongSecondaryKeys")
+        expect(set.instance_variable_get(:@key_map).size).to eq 2
+        expect(set.instance_variable_get(:@map).size).to eq 2
         set.clear
-
-        key_map = set.instance_variable_get(:@key_map)
-        expect(key_map).to be_empty
+        expect(set.instance_variable_get(:@map).size).to eq 0
+        expect(set.instance_variable_get(:@key_map).size).to eq 0
+      else
+        expect(set.instance_variable_get(:@map).size).to eq 2
+        set.clear
+        expect(set.instance_variable_get(:@map).size).to eq 0
       end
     end
   end
@@ -901,7 +909,7 @@ RSpec.describe Weak::Set do
     end
 
     it "garbage collects @key_map for Weak::Set::StrongSecondaryKeys" do
-      if weak_set_module.name == "Weak::Set::StrongSecondaryKeys"
+      if strategy?("StrongSecondaryKeys")
         collectable do
           numbers = (1..5000).map(&:to_s)
           numbers.each do |n|
@@ -1197,7 +1205,7 @@ RSpec.describe Weak::Set do
     end
 
     it "garbage collects @key_map for Weak::Set::StrongSecondaryKeys" do
-      if weak_set_module.name == "Weak::Set::StrongSecondaryKeys"
+      if strategy?("StrongSecondaryKeys")
         collectable do
           set << +"1"
 
