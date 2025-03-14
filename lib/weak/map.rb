@@ -551,11 +551,6 @@ module Weak
       end
     end
 
-    # @!visibility private
-    def pretty_print_cycle(pp)
-      pp.text "#<#{self.class} {#{empty? ? "" : "..."}}>"
-    end
-
     # Merges each of `other_maps` into `self`; returns `self`.
     #
     # Each argument in other_maos must be respond to `each_pair`, e.g. a
