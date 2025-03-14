@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
     CODE_OF_CONDUCT.md
     LICENSE.txt
     README.md
+    .yardopts
   ].flat_map { |glob| Dir.glob(glob, base: __dir__) }
   spec.require_paths = ["lib"]
 
