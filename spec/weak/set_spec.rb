@@ -979,22 +979,22 @@ RSpec.describe Weak::Set do
     let(:set2) { Weak::Set[Weak::Set[0], 1, 2, set] }
 
     it "shows details" do
-      expect(set.inspect).to eq "#<Weak::Set: {1, 2}>"
+      expect(set.inspect).to eq "#<Weak::Set {1, 2}>"
     end
 
     it "inspects nested sets" do
-      expect(set2.inspect).to eq "#<Weak::Set: {1, 2, #<Weak::Set: {0}>, #<Weak::Set: {1, 2}>}>"
+      expect(set2.inspect).to eq "#<Weak::Set {1, 2, #<Weak::Set {0}>, #<Weak::Set {1, 2}>}>"
     end
 
     it "handles infinite recursion" do
       set.add(set2)
       expect(set2.inspect)
-        .to eq "#<Weak::Set: {1, 2, #<Weak::Set: {0}>, #<Weak::Set: {1, 2, #<Weak::Set: {...}>}>}>"
+        .to eq "#<Weak::Set {1, 2, #<Weak::Set {0}>, #<Weak::Set {1, 2, #<Weak::Set {...}>}>}>"
     end
 
     it "is aliased to #to_s" do
       expect(set.method(:to_s)).to eq set.method(:inspect)
-      expect(set.to_s).to eq "#<Weak::Set: {1, 2}>"
+      expect(set.to_s).to eq "#<Weak::Set {1, 2}>"
     end
 
     it "does not swallow nested exceptions" do
@@ -1112,13 +1112,13 @@ RSpec.describe Weak::Set do
 
     it "pretty prints wide" do
       expect(set).to receive(:pretty_print).with(PP).and_call_original
-      expect(PP.pp(set, +"", 80)).to eq "#<Weak::Set: {1, 2, 3}>\n"
+      expect(PP.pp(set, +"", 80)).to eq "#<Weak::Set {1, 2, 3}>\n"
     end
 
     it "pretty prints medium wide" do
       expect(set).to receive(:pretty_print).with(PP).and_call_original
       expect(PP.pp(set, +"", 12)).to eq <<~PP
-        #<Weak::Set:
+        #<Weak::Set
          {1, 2, 3}>
       PP
     end
@@ -1126,7 +1126,7 @@ RSpec.describe Weak::Set do
     it "pretty prints narrow" do
       expect(set).to receive(:pretty_print).with(PP).and_call_original
       expect(PP.pp(set, +"", 2)).to eq <<~PP
-        #<Weak::Set:
+        #<Weak::Set
          {1,
           2,
           3}>
@@ -1143,11 +1143,11 @@ RSpec.describe Weak::Set do
     it "pretty prints nested sets" do
       expect(set).to receive(:pretty_print_cycle).with(PP).and_call_original
       expect(PP.pp(set, +"", 12)).to eq <<~PP
-        #<Weak::Set:
+        #<Weak::Set
          {1,
           2,
           3,
-          #<Weak::Set: {...}>}>
+          #<Weak::Set {...}>}>
       PP
     end
   end

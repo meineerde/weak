@@ -12,6 +12,13 @@ We provide multiple classes which behave similar to their standard-library count
 
 `Weak::Set` behaves similar to the [Set](https://docs.ruby-lang.org/en/3.4/Set.html) class of the Ruby standard library, but all values are only weakly referenced. That way, all values can be garbage collected and silently removed from the set unless they are still referenced from some other live object.
 
+Compared to the `Set` class however, there are a few differences:
+
+  - All element references are weak, allowing each element to be garbage collected unless there is a strong reference to it somwhere else.
+  - We do not necessarily retain the order of elements as they are inserted into the `Weak::Set`. You should not rely on a specific order.
+  - Set membership is governed by object identity rather than by using the `hash` and `eql?` methods of the elements. A `Weak::Set` thus works similat to a `Set` marked as [compare_by_identity](https://docs.ruby-lang.org/en/3.4/Set.html#method-i-compare_by_identity).
+  - You can freely change any objects added to the `Weak::Set`.
+
 ```ruby
 require "weak/set"
 set = Weak::Set.new
