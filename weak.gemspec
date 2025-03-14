@@ -16,8 +16,9 @@ Gem::Specification.new do |spec|
   TXT
   spec.description = <<~TXT
     The Weak library provides a Weak::Set class to store an unordered list of
-    objects. The collection classes only hold weak references to all elements
-    so they can be garbage-collected when there are no more references left.
+    objects and a Weak::Map class to store a key-value map. The collection
+    classes only hold weak references to all elements so they can be
+    garbage-collected when there are no more references left.
   TXT
 
   spec.files = %w[

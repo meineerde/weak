@@ -33,6 +33,32 @@ set
 # => #<Weak::Set {}>
 ```
 
+## Weak::Map
+
+`Weak::Map` behaves similar to a `Hash` or an `ObjectSpace::WeakMap` in Ruby (aka. MRI, aka. YARV). 
+Both keys and values are weak references, allowing either of them to be garbage collected. If either the key or the value of a pair is garbage collected, the entire pair will be removed from the `Weak::Map`.
+
+Compared to the `Set` class however, there are a few differences:
+
+  - Key and value references are weak, allowing each key-value pair to be garbage collected unless there is a strong reference to boith the key and the value somewhere else.
+  - We do not necessarily retain the order of elements as they are inserted into the `Weak::Map`. You should not rely on a specific order.
+  - Map membership is governed by object identity of the key rather than by using the `hash` and `eql?` methods of the elements. A `Weak::Map` thus works similat to a `Hash` marked as [compare_by_identity](https://docs.ruby-lang.org/en/3.4/Hash.html#method-i-compare_by_identity).
+  - You can freely change both keys and values added to the `Weak::Map`.
+
+```ruby
+require "weak/map"
+map = Weak::Map.new
+
+map["some key"] = "a value"
+# => #<Weak::Map {"some key" => "a value"}>
+
+# Do some work, wait a bit, or force a garbage collection run
+3.times { GC.start }
+
+map
+# => #<Weak::Map {}>
+```
+
 ## Usage
 
 Please refer to the documentation at:
@@ -133,6 +159,57 @@ During `checkout` we remember a reference to the returned connection object in t
 If the caller just "forgets" the connection, our pool will also forget it during the next Ruby garbage collection run.
 
 If the caller returns the connection by calling `checkin` again, we can verify that we have in fact created the object by deleting it from the `@outstanding` list. That way, the a checked-out connection can be checked-in again only once and only if it was initially created by the `ConnectionPool`.
+
+### Weak::Map Example
+
+Conversely a `Weak::Map` can be used to store references to other objects. In the example below, we use a single `Mutex` for each `obj` wrapped in a `LockedObject` instance.
+
+Even if a single object is wrapped in multiple `LockedObject` instances, we still use the same shared mutex in each of these instances, ensuring that the `obj` is only every accessed while holding the mutex. Different objects use different mutexes.
+
+If all LockedObject instances for an `obj` and the `obj` itself vanish by being garbage collected, the associated mutex will also be garbage collected without requiring any external coordination.
+
+```ruby
+class LockedObject < BasicObject
+  LOCKS = Weak::Map.new
+  LOCKS_MUTEX = Mutex.new
+
+  def initialize(obj)
+    @obj = obj
+
+    # Assigning the obj mutex must itself be wrapped in a different mutex as a Weak::Map
+    # is not thread-safe. We retain the mutex for obj in @mutex for the LockedObject
+    # instance.
+    LOCKS_MUTEX.synchronize do
+      @mutex = (LOCKS[obj] ||= Mutex.new)
+    end
+  end
+
+  private
+
+  def method_missing(m, *args, **kwargs, &block)
+    @mutex.synchronize do
+      obj.public_send(m, *args, **kwargs, &block)
+    end
+  end
+
+  def respond_to_missing?(m)
+    obj.respond_to?(m)
+  end
+end
+
+string = "foo"
+
+# As an example, we simulate concurrent access to the string from multiple Threads.
+# Especially on JRuby, you would likely see data corruptions without the mutex here.
+5.times do
+  Thread.new do
+    locked = Locked.new(string)
+    ("a".."z").each do |char|
+      locked << char*2
+    end
+  end
+end
+```
 
 ## Development
 

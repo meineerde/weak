@@ -2,7 +2,7 @@ require:
   - rubocop-rspec
 
 RSpec/ExampleLength:
-  Max: 20
+  Max: 25
 
 RSpec/MultipleExpectations:
   Max: 15

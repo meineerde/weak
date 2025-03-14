@@ -58,8 +58,14 @@ module Weak
     def collectable(&block)
       Thread.new do
         Thread.current.report_on_exception = false
-        block.call
-      end.value
+
+        yield
+
+        # A final dummy expectation to ensure that values do not leak to the
+        # environment via the last expect in the block.
+        expect(nil).to be_nil
+      end.join
+      nil
     end
 
     def enumerable_mock(obj, method = :each)
