@@ -1476,24 +1476,6 @@ RSpec.describe Weak::Map do
     end
   end
 
-  describe "#pretty_print_cycle" do
-    let(:set) {
-      set = Weak::Set[1, 2, 3]
-      set << set
-    }
-
-    it "pretty prints nested sets" do
-      expect(set).to receive(:pretty_print_cycle).with(PP).and_call_original
-      expect(PP.pp(set, +"", 12)).to eq <<~PP
-        #<Weak::Set
-         {1,
-          2,
-          3,
-          #<Weak::Set {...}>}>
-      PP
-    end
-  end
-
   describe "#prune" do
     it "returns self" do
       expect(map.prune).to equal map
