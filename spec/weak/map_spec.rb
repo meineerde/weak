@@ -678,6 +678,48 @@ RSpec.describe Weak::Map do
     end
   end
 
+  describe "#delete_if" do
+    before do
+      map.merge!({a: 1, b: 3, c: 1, d: 2, e: 5})
+    end
+
+    it "yields two arguments: key and value" do
+      all_args = []
+      map.delete_if { |*args| all_args << args }
+      expect(all_args.sort).to eq [[:a, 1], [:b, 3], [:c, 1], [:d, 2], [:e, 5]]
+    end
+
+    it "keeps every entry for which block is true and returns self" do
+      expect(map.delete_if { |k, v| v > 4 })
+        .to equal(map)
+        .and have_attributes(
+          to_h: {a: 1, b: 3, c: 1, d: 2}.compare_by_identity
+        )
+    end
+
+    it "removes all entries if the block is true" do
+      expect(map.delete_if { |_k, _v| true })
+        .to equal(map)
+        .and be_empty
+    end
+
+    it "returns self even if unmodified" do
+      expect(map.delete_if { false }).to equal(map)
+    end
+
+    it "returns an Enumerator if called on a non-empty map without a block" do
+      expect(map.delete_if)
+        .to be_an_instance_of(Enumerator)
+        .and have_attributes(size: 5)
+    end
+
+    it "returns an Enumerator if called on an empty map without a block" do
+      expect(Weak::Map.new.delete_if)
+        .to be_an_instance_of(Enumerator)
+        .and have_attributes(size: 0)
+    end
+  end
+
   describe "#dup" do
     it "duplicates the map" do
       map[:a] = 1
@@ -1301,6 +1343,48 @@ RSpec.describe Weak::Map do
     end
   end
 
+  describe "#keep_if" do
+    before do
+      map.merge!({a: 1, b: 3, c: 1, d: 2, e: 5})
+    end
+
+    it "yields two arguments: key and value" do
+      all_args = []
+      map.keep_if { |*args| all_args << args }
+      expect(all_args.sort).to eq [[:a, 1], [:b, 3], [:c, 1], [:d, 2], [:e, 5]]
+    end
+
+    it "keeps every entry for which block is true and returns self" do
+      expect(map.keep_if { |k, v| v % 2 == 0 })
+        .to equal(map)
+        .and have_attributes(
+          to_h: {d: 2}.compare_by_identity
+        )
+    end
+
+    it "removes all entries if the block is false" do
+      expect(map.keep_if { |_k, _v| false })
+        .to equal(map)
+        .and be_empty
+    end
+
+    it "returns self even if unmodified" do
+      expect(map.keep_if { true }).to equal(map)
+    end
+
+    it "returns an Enumerator if called on a non-empty map without a block" do
+      expect(map.keep_if)
+        .to be_an_instance_of(Enumerator)
+        .and have_attributes(size: 5)
+    end
+
+    it "returns an Enumerator if called on an empty map without a block" do
+      expect(Weak::Map.new.keep_if)
+        .to be_an_instance_of(Enumerator)
+        .and have_attributes(size: 0)
+    end
+  end
+
   describe "#keys" do
     it "returns an array with the keys" do
       expect(Weak::Map.new.keys).to be_instance_of(Array).and be_empty
@@ -1513,6 +1597,104 @@ RSpec.describe Weak::Map do
         # The value will be marked as a DeletedEntry.
         expect(map.instance_variable_get(:@values).size).to eq 0
       end
+    end
+  end
+
+  describe "#reject!" do
+    before do
+      map.merge!({a: 1, b: 3, c: 1, d: 2, e: 5})
+    end
+
+    it "yields two arguments: key and value" do
+      all_args = []
+      map.reject! { |*args| all_args << args }
+      expect(all_args.sort).to eq [[:a, 1], [:b, 3], [:c, 1], [:d, 2], [:e, 5]]
+    end
+
+    it "returns self if any changes were made" do
+      expect(map.reject! { |k, v| v > 3 })
+        .to equal(map)
+        .and have_attributes(
+          values: contain_exactly(1, 3, 1, 2)
+        )
+    end
+
+    it "returns nil if no changes were made" do
+      expect(map.reject! { |_k, v| v > 10 }).to be_nil
+      expect(map.reject! { |_k, v| false }).to be_nil
+    end
+
+    it "removes all entries if the block is true" do
+      expect(map.reject! { |_k, _v| true })
+        .to equal(map)
+        .and be_empty
+    end
+
+    it "returns an Enumerator if called on a non-empty map without a block" do
+      expect(map.reject!)
+        .to be_an_instance_of(Enumerator)
+        .and have_attributes(size: 5)
+    end
+
+    it "returns an Enumerator if called on an empty map without a block" do
+      expect(Weak::Map.new.reject!)
+        .to be_an_instance_of(Enumerator)
+        .and have_attributes(size: 0)
+    end
+  end
+
+  describe "select!" do
+    before do
+      map.merge!({a: 1, b: 3, c: 1, d: 2, e: 5})
+    end
+
+    it "yields two arguments: key and value" do
+      all_args = []
+      map.select! { |*args| all_args << args }
+      expect(all_args.sort).to eq [[:a, 1], [:b, 3], [:c, 1], [:d, 2], [:e, 5]]
+    end
+
+    it "returns self if any changes were made" do
+      expect(map.select! { |k, v| v < 5 })
+        .to equal(map)
+        .and have_attributes(
+          values: contain_exactly(1, 3, 1, 2)
+        )
+    end
+
+    it "returns nil if no changes were made" do
+      expect(map.select! { |_k, v| v < 10 }).to be_nil
+    end
+
+    it "removes all entries if the block is false" do
+      expect(map.select! { |_k, _v| false })
+        .to equal(map)
+        .and be_empty
+    end
+
+    it "returns an Enumerator if called on a non-empty map without a block" do
+      expect(map.select!)
+        .to be_an_instance_of(Enumerator)
+        .and have_attributes(size: 5)
+    end
+
+    it "returns an Enumerator if called on an empty map without a block" do
+      expect(Weak::Map.new.select!)
+        .to be_an_instance_of(Enumerator)
+        .and have_attributes(size: 0)
+    end
+
+    it "is aliased to #filter!" do
+      expect(map.method(:filter!)).to eq map.method(:select!)
+
+      expect(map.filter! { |k, v| k.is_a?(Symbol) }).to be_nil
+      expect(map.to_h).to eq({a: 1, b: 3, c: 1, d: 2, e: 5}.compare_by_identity)
+
+      expect(map.filter! { |_k, v| v < 5 })
+        .to equal(map)
+        .and have_attributes(
+          values: contain_exactly(1, 3, 1, 2)
+        )
     end
   end
 

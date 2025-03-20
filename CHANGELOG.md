@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+- Add `Weak::Map#delete_if`
+- Add `Weak::Map#keep_if`
+- Add `Weak::Map#reject!`
+- Add `Weak::Map#select!`
+
 ## [0.1.0] - 2025-03-14
 
 - Initial version of `Weak::Set` to store an unordered collection of objects.

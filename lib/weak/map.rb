@@ -432,6 +432,26 @@ module Weak
       proc
     end
 
+    # Deletes every key-value pair from `self` for which the given block
+    # evaluates to a truthy value.
+    #
+    # If no block is given, an `Enumerator` is returned instead.
+    #
+    # @yield [key, value] calls the given block once for each key in the map
+    # @yieldparam key [Object] a key
+    # @yieldparam value [Object] the corresponding value
+    # @return [Enumerator, self] `self` if a block was given or an `Enumerator`
+    #   if no block was given.
+    # @see reject!
+    def delete_if(&block)
+      return enum_for(__method__) { size } unless block_given?
+
+      each do |key, value|
+        delete(key) if yield(key, value)
+      end
+      self
+    end
+
     # @return [Boolean] `true` if `self` contains no elements
     def empty?
       size == 0
@@ -474,6 +494,26 @@ module Weak
       end
     end
     alias_method :to_s, :inspect
+
+    # Deletes every key-value pair from `self` for which the given block
+    # evaluates to a falsey value.
+    #
+    # If no block is given, an `Enumerator` is returned instead.
+    #
+    # @yield [key, value] calls the given block once for each key in the map
+    # @yieldparam key [String] a hash key
+    # @yieldparam value [Object] the corresponding hash value
+    # @return [Enumerator, self] `self` if a block was given, an `Enumerator`
+    #  if no block was given.
+    # @see select!
+    def keep_if(&block)
+      return enum_for(__method__) { size } unless block_given?
+
+      each do |key, value|
+        delete(key) unless yield(key, value)
+      end
+      self
+    end
 
     # Returns the new {Weak::Map} formed by merging each of `other_maps` into a
     # copy of `self`.
@@ -550,6 +590,62 @@ module Weak
         pp.pp to_a.sort_by! { |k, _v| k.__id__ }.to_h
       end
     end
+
+    # Deletes every key-value pair from `self` for which the given block
+    # evaluates to a truethy value.
+    #
+    # Equivalent to {#delete_if}, but returns `nil` if no changes were made.
+    #
+    # If no block is given, an `Enumerator` is returned instead.
+    #
+    # @yield [key, value] calls the given block once for each key in the map
+    # @yieldparam key [Object] a key
+    # @return [Enumerator, self, nil] `self` if a block was given and some
+    #    element(s) were deleted, `nil` if a block was given but no keys were
+    #   deleted, or an `Enumerator` if no block was given.
+    # #see #delete_if
+    def reject!(&block)
+      return enum_for(__method__) { size } unless block_given?
+
+      deleted_anything = false
+      each do |key, value|
+        next unless yield(key, value)
+
+        delete(key)
+        deleted_anything = true
+      end
+
+      self if deleted_anything
+    end
+
+    # Deletes every key-value pair from `self` for which the given block
+    # evaluates to a falsey value.
+    #
+    # Equivalent to {#keep_if}, but returns `nil` if no changes were made.
+    #
+    # If no block is given, an `Enumerator` is returned instead.
+    #
+    # @yield [key, value] calls the given block once for each key in the map
+    # @yieldparam key [Object] a key
+    # @yieldparam value [Object] the corresponding value
+    # @return [Enumerator, self, nil] `self` if a block was given and some
+    #    element(s) were deleted, `nil` if a block was given but nothing was
+    #    deleted, or an `Enumerator` if no block was given.
+    # @see keep_if
+    def select!(&block)
+      return enum_for(__method__) { size } unless block_given?
+
+      deleted_anything = false
+      each do |key, value|
+        next if yield(key, value)
+
+        delete(key)
+        deleted_anything = true
+      end
+
+      self if deleted_anything
+    end
+    alias_method :filter!, :select!
 
     # Merges each of `other_maps` into `self`; returns `self`.
     #
