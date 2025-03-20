@@ -388,7 +388,7 @@ RSpec.describe Weak::Map do
   end
 
   describe "#clone" do
-    it "clones the set" do
+    it "clones the map" do
       map[:foo] = 1
 
       expect(map.clone)
@@ -426,7 +426,7 @@ RSpec.describe Weak::Map do
 
       expect(map).to have_received(:warn).with("Can't freeze Weak::Map")
 
-      # Instance variables of the clone set won't be frozen either
+      # Instance variables of the cloned map won't be frozen either
       expect(map.clone(freeze: true).instance_variables).to all satisfy { |var|
         value = map.instance_variable_get(var)
         value.nil? || !value.frozen?
@@ -952,7 +952,7 @@ RSpec.describe Weak::Map do
       expect(map.empty?).to be false
     end
 
-    it "returns true for an empty set" do
+    it "returns true for an empty map" do
       expect(map.empty?).to be true
     end
 
@@ -1256,7 +1256,7 @@ RSpec.describe Weak::Map do
       end
     end
 
-    it "inspects nested sets" do
+    it "inspects nested maps" do
       nested = Weak::Map.new
       nested[3] = map
 
