@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.version = Weak::VERSION
   spec.authors = ["Holger Just"]
   spec.summary = <<~TXT
-    Tools to use handle collections of weak-referenced values in Ruby
+    Tools to handle collections of weakly-referenced values
   TXT
   spec.description = <<~TXT
     The Weak library provides a Weak::Set class to store an unordered list of
