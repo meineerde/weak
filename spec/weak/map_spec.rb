@@ -2009,4 +2009,34 @@ RSpec.describe Weak::Map do
       end
     end
   end
+
+  describe "#values_at" do
+    before do
+      map.merge!(a: 9, b: :a, c: -10, d: nil)
+    end
+
+    it "returns an Array" do
+      expect(map.values_at).to be_instance_of(::Array).and eq([])
+    end
+
+    it "returns valeus in order" do
+      expect(map.values_at(:a, :d, :b))
+        .to be_instance_of(::Array)
+        .and eq([9, nil, :a])
+    end
+
+    it "returns default values" do
+      map.default = 123
+      expect(map.values_at("missing", :a))
+        .to be_instance_of(::Array)
+        .and eq([123, 9])
+    end
+
+    it "returns default_proc values" do
+      map.default_proc = ->(map, key) { key * 2 }
+      expect(map.values_at(:b, 21))
+        .to be_instance_of(::Array)
+        .and eq([:a, 42])
+    end
+  end
 end

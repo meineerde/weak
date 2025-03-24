@@ -6,6 +6,7 @@
 - Add `Weak::Map#keep_if`
 - Add `Weak::Map#reject!`
 - Add `Weak::Map#select!`
+- Add `Weak::Map#values_at`
 
 ## [0.1.0] - 2025-03-14
 

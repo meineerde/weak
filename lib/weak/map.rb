@@ -770,6 +770,25 @@ module Weak
       hash
     end
 
+    # Returns a new `Array` containing values for the given keys:
+    #
+    #     map = Weak::Map[foo: 0, bar: 1, baz: 2]
+    #     map.values_at(:baz, :foo)
+    #     # => [2, 0]
+    #
+    # The default values are returned for any keys that are not found:
+    #
+    #     map.values_at(:hello, :foo)
+    #     # => [nil, 0]
+    #
+    # @param keys [Array<Object>] a list of keys
+    # @return [Array] an `Array` containing the values for the given keys if
+    #   present or the default value if not. The order of the given `keys` is
+    #   preserved.
+    def values_at(*keys)
+      keys.map { |key| self[key] }
+    end
+
     private
 
     # Callback method which is called on the new object during `dup` or `clone`
