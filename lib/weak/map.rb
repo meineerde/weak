@@ -278,7 +278,6 @@ module Weak
     #   hash = {foo: 0, bar: 1, baz: 2}
     #   Weak::Map[hash]
     #   # => #<Weak::Map {:foo=>0, :bar=>1, :baz=>2}>
-
     def self.[](*maps)
       Weak::Map.new.merge!(*maps)
     end
