@@ -25,11 +25,11 @@ RSpec.describe Weak::Map do
     map[:key] = :value
 
     collectable do
-      keys = (1..4999).to_a
+      keys = (1..4999).map(&:to_s)
       values = []
 
       keys.each do |key|
-        values << (value = key.to_s)
+        values << (value = "value-#{key}")
         map[key] = value
       end
 
