@@ -4,6 +4,7 @@
 # of the MIT license. See the LICENSE.txt file for details.
 
 name: Standard
+permissions: {}
 
 on:
   pull_request:
@@ -16,8 +17,13 @@ jobs:
   standard:
     name: Standard Ruby
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
     env:
       BUNDLE_WITHOUT: "development:doc"
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby

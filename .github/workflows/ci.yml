@@ -4,6 +4,7 @@
 # of the MIT license. See the LICENSE.txt file for details.
 
 name: CI
+permissions: {}
 
 on:
   pull_request:
@@ -51,6 +52,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') }}
 
+    permissions:
+      contents: read
+
     env:
       BUNDLE_WITHOUT: "development:doc"
 
@@ -81,6 +85,9 @@ jobs:
     name: Coverage
     needs: rspec
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
 
     steps:
       - name: Coveralls Finished
