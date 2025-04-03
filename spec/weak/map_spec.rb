@@ -108,9 +108,9 @@ RSpec.describe Weak::Map do
     end
 
     it "raises a TypeError for unexpeced values" do
-      expect { Weak::Map[[[:a, 1]]] }.to raise_error(NoMethodError)
-      expect { Weak::Map[:map] }.to raise_error(NoMethodError)
-      expect { Weak::Map[nil] }.to raise_error(NoMethodError)
+      expect { Weak::Map[[[:a, 1]]] }.to raise_error(TypeError)
+      expect { Weak::Map[:map] }.to raise_error(TypeError)
+      expect { Weak::Map[nil] }.to raise_error(TypeError)
     end
   end
 
@@ -1486,6 +1486,20 @@ RSpec.describe Weak::Map do
         )
     end
 
+    it "accepts hash-like objects" do
+      map[:a] = 1
+
+      hash_like = instance_double(Hash)
+      allow(hash_like).to receive(:to_hash).and_return({b: 2})
+
+      expect(map.merge(hash_like))
+        .to be_a(Weak::Map)
+        .and not_equal(map)
+        .and have_attributes(
+          to_h: {a: 1, b: 2}.compare_by_identity
+        )
+    end
+
     it "accepts zero arguments and returns a copy of self" do
       map[:a] = 1
       expect(map.merge)
@@ -1804,6 +1818,19 @@ RSpec.describe Weak::Map do
         .to equal(map)
         .and have_attributes(
           to_h: {a: 1, b: 2, c: 3, d: 4}.compare_by_identity
+        )
+    end
+
+    it "accepts hash-like objects" do
+      map[:a] = 1
+
+      hash_like = instance_double(Hash)
+      allow(hash_like).to receive(:to_hash).and_return({b: 2})
+
+      expect(map.update(hash_like))
+        .to equal(map)
+        .and have_attributes(
+          to_h: {a: 1, b: 2}.compare_by_identity
         )
     end
 

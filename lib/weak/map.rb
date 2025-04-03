@@ -270,8 +270,8 @@ module Weak
     INSPECT_KEY = :__inspect_key__
     private_constant :INSPECT_KEY
 
-    # @param maps [Array<#each_pair>] a list of maps which should be
-    #   merged into the new {Weak::Map}
+    # @param maps [Array<Weak::Map, Hash, #to_hash>] a list of maps which should
+    #   be merged into the new {Weak::Map}
     # @return [Weak::Map] a new {Weak::Map} object populated with the given
     #   objects, if any. With no argument, returns a new empty {Weak::Map}.
     # @example
@@ -517,14 +517,14 @@ module Weak
     # Returns the new {Weak::Map} formed by merging each of `other_maps` into a
     # copy of `self`.
     #
-    # Each argument in other_maos must be respond to `each_pair`, e.g. a
-    # {Weak::Map} or a `Hash`.
+    # Each argument in `other_maps` must be either a {Weak::Map}, a Hash object
+    # or must be transformable to a Hash by calling `each_hash` on it.
     #
     # With arguments and no block:
     #
     #   - Returns a new {Weak::Map}, after the given maps are merged into a copy
     #     of `self`.
-    #   - The given hashes are merged left to right.
+    #   - The given maps are merged left to right.
     #   - Each duplicate-key entry’s value overwrites the previous value.
     #
     # Example:
@@ -541,7 +541,7 @@ module Weak
     # With arguments and a block:
     #
     #   - Returns `self`, after the given maps are merged.
-    #   - The given hashes are merged left to right.
+    #   - The given maps are merged left to right.
     #   - For each duplicate key:
     #     - Calls the block with the key and the old and new values.
     #     - The block’s return value becomes the new value for the entry.
@@ -565,8 +565,8 @@ module Weak
     #   - Returns a copy of `self`.
     #   - The block, if given, is ignored.
     #
-    # @param other_maps [Array<#each_pair>] a list of maps which should be
-    #   merged into a copy of `self`
+    # @param other_maps [Array<Weak::Map, Hash, #to_hash>] a list of maps which
+    #   should be merged into a copy of `self`
     # @yield [key, old_value, new_value] If `self` already contains a value for
     #   a key, we yield the key, the old value from `self` and the new value
     #   from the given map and use the value returned from the block as the new
@@ -648,13 +648,13 @@ module Weak
 
     # Merges each of `other_maps` into `self`; returns `self`.
     #
-    # Each argument in other_maos must be respond to `each_pair`, e.g. a
-    # {Weak::Map} or a `Hash`.
+    # Each argument in `other_maps` must be either a {Weak::Map}, a Hash object
+    # or must be transformable to a Hash by calling `each_hash` on it.
     #
     # With arguments and no block:
     #
     #   - Returns self, after the given maps are merged into it.
-    #   - The given hashes are merged left to right.
+    #   - The given maps are merged left to right.
     #   - Each duplicate-key entry’s value overwrites the previous value.
     #
     # Example:
@@ -671,7 +671,7 @@ module Weak
     # With arguments and a block:
     #
     #   - Returns `self`, after the given maps are merged.
-    #   - The given hashes are merged left to right.
+    #   - The given maps are merged left to right.
     #   - For each duplicate key:
     #     - Calls the block with the key and the old and new values.
     #     - The block’s return value becomes the new value for the entry.
@@ -695,8 +695,8 @@ module Weak
     #   - Returns `self`.
     #   - The block, if given, is ignored.
     #
-    # @param other_maps [Array<#each_pair>] a list of maps which should be
-    #   merged into `self`
+    # @param other_maps [Array<Weak::Map, Hash, #to_hash>] a list of maps which
+    #    should be merged into `self`
     # @yield [key, old_value, new_value] If `self` already contains a value for
     #   a key, we yield the key, the old value from `self` and the new value
     #   from the given map and use the value returned from the block as the new
@@ -713,7 +713,7 @@ module Weak
         missing = Object.new
 
         other_maps.each do |map|
-          map.each_pair do |key, value|
+          _implicit(map).each_pair do |key, value|
             old_value = fetch(key, missing)
             value = yield(key, old_value, value) unless missing == old_value
             self[key] = value
@@ -721,7 +721,7 @@ module Weak
         end
       else
         other_maps.each do |map|
-          map.each_pair do |key, value|
+          _implicit(map).each_pair do |key, value|
             self[key] = value
           end
         end
@@ -822,6 +822,22 @@ module Weak
           receiver: self,
           key: key
         )
+      end
+    end
+
+    # @param map [Weak::Map, Hash, #to_hash] a {Weak::Map} or a Hash object or
+    #   an object which can be converted to a `Hash` by calling `to_hash` on it
+    # @return [Weak::Map, Hash] either a `Weak::Map` or a `Hash` object
+    #   converted from the given `map`
+    # @raise [TypeError] if the given `map` is not a {Weak::Map} and not a
+    #   `Hash`, and could not ge converted to a Hash
+    def _implicit(map)
+      if Weak::Map === map || ::Hash === map
+        map
+      elsif (hash = ::Hash.try_convert(map))
+        hash
+      else
+        raise TypeError, "no implicit conversion of #{map.class} into #{self.class}"
       end
     end
   end
