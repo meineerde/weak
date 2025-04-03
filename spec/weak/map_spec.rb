@@ -1583,32 +1583,32 @@ RSpec.describe Weak::Map do
       next unless strategy?("StrongKeys", "StrongSecondaryKeys")
 
       collectable do
-        key = +"foo"
-        map[key] = 123
+        foo = +"foo"
+        map[foo] = 123
+        map[123] = foo
 
-        expect(map.instance_variable_get(:@keys).size).to eq 1
-        expect(map.instance_variable_get(:@values).size).to eq 1
+        expect(map.instance_variable_get(:@keys).size).to eq 2
+        expect(map.instance_variable_get(:@values).size).to eq 2
         if strategy?("StrongSecondaryKeys")
-          expect(map.instance_variable_get(:@key_map).size).to eq 1
+          expect(map.instance_variable_get(:@key_map).size).to eq 2
         end
       end
 
       garbage_collect_until do
-        expect(map.instance_variable_get(:@keys).size).to eq 0
+        expect(map.instance_variable_get(:@keys).size).to eq 1
+        expect(map.instance_variable_get(:@values).size).to eq 1
       end
-      expect(map.instance_variable_get(:@values).size).to eq 1
       if strategy?("StrongSecondaryKeys")
-        expect(map.instance_variable_get(:@key_map).size).to eq 1
+        expect(map.instance_variable_get(:@key_map).size).to eq 2
       end
 
       map.prune
 
-      expect(map.instance_variable_get(:@keys).size).to eq 0
       if strategy?("StrongSecondaryKeys")
         expect(map.instance_variable_get(:@key_map).size).to eq 0
       end
       garbage_collect_until do
-        # The value will be marked as a DeletedEntry.
+        expect(map.instance_variable_get(:@keys).size).to eq 0
         expect(map.instance_variable_get(:@values).size).to eq 0
       end
     end
