@@ -617,6 +617,22 @@ module Weak
       self if deleted_anything
     end
 
+    # Replaces the contents of `self` with the contents of the given Hash-like
+    # object and returns `self`.
+    #
+    # If the given `map` defines a {#default} value or {#default_proc}, this
+    # will also replace the respective seting in `self`.
+    #
+    # @param map (see #_implicit)
+    # @return [self]
+    # @example
+    #     map = Weak::Map[a: 1, b: 3, c: 1] #=> #<Weak::Map {a: 1, b: 3, c: 1}>
+    #     map.replace({x: :y})              #=> #<Weak::Map {x: :y}>
+    #     map                               #=> #<Weak::Map {x: :y}>
+    def replace(map)
+      initialize_copy(_implicit(map))
+    end
+
     # Deletes every key-value pair from `self` for which the given block
     # evaluates to a falsey value.
     #

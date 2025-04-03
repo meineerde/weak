@@ -5,6 +5,7 @@
 - Add `Weak::Map#delete_if`
 - Add `Weak::Map#keep_if`
 - Add `Weak::Map#reject!`
+- Add `Weak::Map#replace`
 - Add `Weak::Map#select!`
 - Add `Weak::Map#values_at`
 

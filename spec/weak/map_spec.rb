@@ -1657,6 +1657,98 @@ RSpec.describe Weak::Map do
     end
   end
 
+  describe "#replace" do
+    before do
+      map.merge!({a: 1, b: 6, c: 1})
+    end
+
+    it "replaces all elements" do
+      expect(map.replace(Weak::Map[{x: 9, y: 10}]))
+        .to equal(map)
+        .and have_attributes(
+          size: 2,
+          to_h: {x: 9, y: 10}.compare_by_identity
+        )
+    end
+
+    it "accepts hash-like objects" do
+      map[:a] = 1
+
+      hash_like = instance_double(Hash)
+      allow(hash_like).to receive(:to_hash).and_return({b: 2})
+
+      expect(map.replace(hash_like))
+        .to equal(map)
+        .and have_attributes(
+          to_h: {b: 2}.compare_by_identity
+        )
+    end
+
+    it "transfers default value" do
+      other = Weak::Map.new(5)
+      map.replace(other)
+      expect(map.default).to eq 5
+    end
+
+    it "transfers default proc" do
+      other = Weak::Map.new { |m, k| k * 2 }
+      map.replace(other)
+      expect(map.default(5)).to eq 10
+    end
+
+    it "overrides default_proc with a default value" do
+      map.default_proc = proc { |h, k| k * 5 }
+      other = Weak::Map.new(-> { raise "Should not invoke lambda" })
+      map.replace(other)
+
+      expect(map.default).to eq other.default
+    end
+
+    it "raises TypeError on invalid arguments" do
+      expect { map.replace :foo }.to raise_error(TypeError)
+      expect { map.replace 123 }.to raise_error(TypeError)
+      expect { map.replace nil }.to raise_error(TypeError)
+      expect { map.replace true }.to raise_error(TypeError)
+      expect { map.replace [] }.to raise_error(TypeError)
+    end
+
+    it "keeps existing data if there's an error" do
+      expect { map.replace nil }.to raise_error(TypeError)
+      expect(map.to_h).to eq({a: 1, b: 6, c: 1}.compare_by_identity)
+    end
+
+    it "cleans up internal data" do
+      next unless strategy?("StrongKeys", "StrongSecondaryKeys")
+
+      keys = map.instance_variable_get(:@keys)
+      expect(keys.size).to eq 3
+
+      values = map.instance_variable_get(:@values)
+      expect(values.size).to eq 3
+
+      if strategy?("StrongSecondaryKeys")
+        key_map = map.instance_variable_get(:@key_map)
+        expect(key_map.size).to eq 3
+      end
+
+      map.replace Weak::Map[{x: 9}]
+
+      new_keys = map.instance_variable_get(:@keys)
+      expect(new_keys).not_to equal keys
+      expect(new_keys.size).to eq 1
+
+      new_values = map.instance_variable_get(:@values)
+      expect(new_values).not_to equal values
+      expect(new_values.size).to eq 1
+
+      if strategy?("StrongSecondaryKeys")
+        new_key_map = map.instance_variable_get(:@key_map)
+        expect(new_key_map).not_to equal key_map
+        expect(new_key_map.size).to eq 1
+      end
+    end
+  end
+
   describe "select!" do
     before do
       map.merge!({a: 1, b: 3, c: 1, d: 2, e: 5})
