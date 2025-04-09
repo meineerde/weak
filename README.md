@@ -38,11 +38,11 @@ set
 `Weak::Map` behaves similar to a `Hash` or an `ObjectSpace::WeakMap` in Ruby (aka. MRI, aka. YARV). 
 Both keys and values are weak references, allowing either of them to be garbage collected. If either the key or the value of a pair is garbage collected, the entire pair will be removed from the `Weak::Map`.
 
-Compared to the `Set` class however, there are a few differences:
+Compared to the `Hash` class however, there are a few differences:
 
   - Key and value references are weak, allowing each key-value pair to be garbage collected unless there is a strong reference to boith the key and the value somewhere else.
   - We do not necessarily retain the order of elements as they are inserted into the `Weak::Map`. You should not rely on a specific order.
-  - Map membership is governed by object identity of the key rather than by using the `hash` and `eql?` methods of the elements. A `Weak::Map` thus works similat to a `Hash` marked as [compare_by_identity](https://docs.ruby-lang.org/en/3.4/Hash.html#method-i-compare_by_identity).
+  - Map membership is governed by object identity of the key rather than by using its `hash` and `eql?` methods. A `Weak::Map` thus works similar to a `Hash` marked as [compare_by_identity](https://docs.ruby-lang.org/en/3.4/Hash.html#method-i-compare_by_identity).
   - You can freely change both keys and values added to the `Weak::Map`.
 
 ```ruby
