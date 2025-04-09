@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-04-09
+
 - Add `Weak::Map#delete_if`
 - Add `Weak::Map#keep_if`
 - Add `Weak::Map#reject!`

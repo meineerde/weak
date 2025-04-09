@@ -10,5 +10,5 @@ module Weak
   # The {Weak} version as a `Gem::Version` string. We follow semantic
   # versioning.
   # @see https://semver.org/
-  VERSION = "0.1.0"
+  VERSION = "0.2.0"
 end
