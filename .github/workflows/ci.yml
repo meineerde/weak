@@ -30,6 +30,7 @@ jobs:
           - ruby-head
 
           - jruby-9.4
+          - jruby-10
 
           - truffleruby
           - truffleruby+graalvm
