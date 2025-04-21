@@ -60,7 +60,11 @@ RSpec.describe Weak::Set do
 
       # We always use the object identity of elements. There is no need to
       # rehash / reset the storage.
-      :reset
+      :reset,
+
+      # JRuby 10 defines these methods on Set. Bug?
+      :taint,
+      :untaint
     ]
     common_methods = (expected_methods & set.methods)
     expect(common_methods).to match expected_methods
