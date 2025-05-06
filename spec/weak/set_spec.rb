@@ -58,6 +58,14 @@ RSpec.describe Weak::Set do
       :initialize_clone,
       :initialize_dup,
 
+      # These methods are (likely) added in Ruby 3.5 for the newly built-in Set
+      # class by Psych in `ext/psych/lib/psych/core_ext.rb`. As a Weak::Set is
+      # not meaningfully serializable (but still can use the default serialize
+      # options for any Ruby object if so desired), we won't separately
+      # implement these methods.
+      :init_with,
+      :encode_with,
+
       # We always use the object identity of elements. There is no need to
       # rehash / reset the storage.
       :reset,
