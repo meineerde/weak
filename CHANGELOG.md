@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Fix typos in code documentation
+- Ignore some unnecessary methods defined on some Set implementations in set_spec
+- Run specs on JRuby 10 in Github Actions
+- Retry TruffleRuby rspec runs on Github Actions to avoid random failures due to flakey GC.
+
 ## [0.2.0] - 2025-04-09
 
 - Add `Weak::Map#delete_if`
