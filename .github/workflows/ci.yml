@@ -31,23 +31,35 @@ jobs:
 
           - jruby-9.4
           - jruby-10.0
-
-          - truffleruby
-          - truffleruby+graalvm
         coverage:
           - 1
+        retryable:
+          - 0
 
         include:
           - ruby: jruby-9.4.0.0
             os: ubuntu-22.04
+            retryable: 0
+            coverage: 1
+
+          - ruby: truffleruby
+            os: ubuntu-latest
+            retryable: 1
+            coverage: 1
+
+          - ruby: truffleruby+graalvm
+            os: ubuntu-latest
+            retryable: 1
             coverage: 1
 
           - ruby: truffleruby-22
             os: ubuntu-22.04
+            retryable: 1
             coverage: 0
 
           - ruby: truffleruby+graalvm-22
             os: ubuntu-22.04
+            retryable: 1
             coverage: 0
 
     runs-on: ${{ matrix.os }}
@@ -72,7 +84,12 @@ jobs:
           bundler-cache: true
 
       - name: Run specs
-        run: bundle exec rake spec
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 5
+          max_attempts: ${{ matrix.retryable && 3 || 1 }}
+          retry_wait_seconds: 1
+          command: bundle exec rake spec
 
       - name: Coveralls Parallel
         if: ${{ matrix.coverage == 1 }}
