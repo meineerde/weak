@@ -34,9 +34,9 @@ module Weak
       private
 
       # This method is called during {#_get}. It generally needs to be
-      # overwritten in a "sub"-mdule to automatically cleanup any internal data.
-      # The implemented `auto_prune` method should quickly check if a prune is
-      # necessary and then either call the `prune` method or return.
+      # overwritten in a "sub"-module to automatically cleanup any internal
+      # data. The implemented `auto_prune` method should quickly check if a
+      # prune is necessary and then either call the `prune` method or return.
       #
       # @return [void]
       def auto_prune
