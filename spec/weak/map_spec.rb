@@ -654,7 +654,7 @@ RSpec.describe Weak::Map do
         map.delete(key)
       end
 
-      expect(visited).to match_array((:a..:z))
+      expect(visited).to match_array :a..:z
       expect(map).to be_empty
     end
 
