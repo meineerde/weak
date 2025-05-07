@@ -8,6 +8,7 @@
 require "set"
 
 require "weak/map/abstract_strong_keys"
+require "weak/undefined"
 
 ##
 module Weak

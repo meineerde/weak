@@ -10,6 +10,8 @@ require_relative "map/weak_keys"
 require_relative "map/strong_keys"
 require_relative "map/strong_secondary_keys"
 
+require "weak/undefined"
+
 ##
 module Weak
   # `Weak::Map` behaves similar to a `Hash` or an `ObjectSpace::WeakMap` in Ruby

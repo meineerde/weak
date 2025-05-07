@@ -6,6 +6,7 @@
 # of the MIT license. See the LICENSE.txt file for details.
 
 require "weak/map/deletable"
+require "weak/undefined"
 
 ##
 module Weak
