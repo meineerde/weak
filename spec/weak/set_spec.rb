@@ -43,7 +43,7 @@ RSpec.describe Weak::Set do
       # A Weak::Set is generally not used to store strings to be combined.
       :join,
 
-      # A weak set is unsuitable for these operations as the mopdified elements
+      # A weak set is unsuitable for these operations as the modified elements
       # objects would be quickly garbage collected.
       :map!,
       :collect!,
