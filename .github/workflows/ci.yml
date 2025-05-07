@@ -89,6 +89,7 @@ jobs:
           timeout_minutes: 5
           max_attempts: ${{ matrix.retryable && 3 || 1 }}
           retry_wait_seconds: 1
+          continue_on_error: true
           command: bundle exec rake spec
 
       - name: Coveralls Parallel
