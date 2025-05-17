@@ -64,7 +64,7 @@ map
 Please refer to the documentation at:
 
 - [📘 Documentation](https://www.rubydoc.info/gems/weak)
-- [💥 Development Documentation](https://www.rubydoc.info/github/meineerde/weak/main) of the [main branch](https://github.com/meineerde/weak/tree/main)
+- [💥 Development Documentation](https://www.rubydoc.info/github/meineerde/weak) of the [main branch](https://github.com/meineerde/weak/tree/main)
 
 > [!WARNING]
 > The Weak collections are not inherently thread-safe. When accessing a collection from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
