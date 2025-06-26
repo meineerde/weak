@@ -487,8 +487,8 @@ module Weak
 
       object_ids << object_id
       begin
-        elements = to_a.sort_by! { |k, _v| k.__id__ }.to_h.inspect[1..-2]
-        "#<#{self.class} {#{elements}}>"
+        elements = to_a.sort_by! { |k, _v| k.__id__ }.to_h
+        "#<#{self.class} #{elements}>"
       ensure
         object_ids.pop
       end
