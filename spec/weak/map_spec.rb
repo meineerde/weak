@@ -1574,6 +1574,62 @@ RSpec.describe Weak::Map do
     end
   end
 
+  describe "#pretty_print_cycle" do
+    let(:nested_keys_map) {
+      map = Weak::Map[1 => :a]
+      map[map] = :b
+
+      map
+    }
+
+    let(:nested_values_map) {
+      map = Weak::Map[1 => :a]
+      map[2] = map
+
+      map
+    }
+
+    it "pretty prints maps with nested keys" do
+      expect(nested_keys_map)
+        .to receive(:pretty_print_cycle).with(PP)
+        .and_call_original
+
+      if Gem::Requirement.new("< 3.4.0") === Gem.ruby_version
+        expect(PP.pp(nested_keys_map, +"", 30)).to eq <<~PP
+          #<Weak::Map
+           {1=>:a,
+            #<Weak::Map {...}>=>:b}>
+        PP
+      else
+        expect(PP.pp(nested_keys_map, +"", 30)).to eq <<~PP
+          #<Weak::Map
+           {1 => :a,
+            #<Weak::Map {...}> => :b}>
+        PP
+      end
+    end
+
+    it "pretty prints maps with nested values" do
+      expect(nested_values_map)
+        .to receive(:pretty_print_cycle).with(PP)
+        .and_call_original
+
+      if Gem::Requirement.new("< 3.4.0") === Gem.ruby_version
+        expect(PP.pp(nested_values_map, +"", 30)).to eq <<~PP
+          #<Weak::Map
+           {1=>:a,
+            2=>#<Weak::Map {...}>}>
+        PP
+      else
+        expect(PP.pp(nested_values_map, +"", 30)).to eq <<~PP
+          #<Weak::Map
+           {1 => :a,
+            2 => #<Weak::Map {...}>}>
+        PP
+      end
+    end
+  end
+
   describe "#prune" do
     it "returns self" do
       expect(map.prune).to equal map
