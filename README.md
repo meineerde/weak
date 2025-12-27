@@ -1,6 +1,8 @@
 # Weak
 
 [![gem version badge](https://badge.fury.io/rb/weak.svg)](https://rubygems.org/gems/weak)
+[![github repo badge](https://img.shields.io/badge/github-repo-blue?logo=github)](https://github.com/meineerde/weak)
+
 [![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/meineerde/weak/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak?branch=main)
 
