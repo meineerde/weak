@@ -606,9 +606,9 @@ module Weak
     # @yield [key, value] calls the given block once for each key in the map
     # @yieldparam key [Object] a key
     # @return [Enumerator, self, nil] `self` if a block was given and some
-    #    element(s) were deleted, `nil` if a block was given but no keys were
+    #   element(s) were deleted, `nil` if a block was given but no keys were
     #   deleted, or an `Enumerator` if no block was given.
-    # #see #delete_if
+    # @see #delete_if
     def reject!(&block)
       return enum_for(__method__) { size } unless block_given?
 
@@ -650,8 +650,8 @@ module Weak
     # @yieldparam key [Object] a key
     # @yieldparam value [Object] the corresponding value
     # @return [Enumerator, self, nil] `self` if a block was given and some
-    #    element(s) were deleted, `nil` if a block was given but nothing was
-    #    deleted, or an `Enumerator` if no block was given.
+    #   element(s) were deleted, `nil` if a block was given but nothing was
+    #   deleted, or an `Enumerator` if no block was given.
     # @see keep_if
     def select!(&block)
       return enum_for(__method__) { size } unless block_given?
