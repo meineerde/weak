@@ -31,4 +31,9 @@ group :test do
 
   gem "simplecov", require: false
   gem "coveralls_reborn", require: false
+
+  # Restrict json gem on Truffleruby 22 as newer versions do not compile there
+  if RUBY_ENGINE == "truffleruby" && RUBY_ENGINE_VERSION.to_i < 23
+    gem "json", "~> 2.5.1"
+  end
 end
