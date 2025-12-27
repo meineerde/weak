@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-12-27
+
 - Fix typos in code documentation
 - Ignore some unnecessary methods defined on some `Set` implementations in `set_spec`
 - Run specs on JRuby 10 in Github Actions

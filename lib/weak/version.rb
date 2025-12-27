@@ -16,7 +16,7 @@ module Weak
     MINOR = 2
     # PATCH version. It is incremented when making backwards-compatible
     # bug-fixes.
-    PATCH = 0
+    PATCH = 1
     # PRERELEASE suffix. Set to a alphanumeric string on any pre-release
     # versions like beta or RC releases; `nil` on regular releases
     PRERELEASE = nil
