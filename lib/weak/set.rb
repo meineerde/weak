@@ -561,7 +561,7 @@ module Weak
 
     # @!visibility private
     def pretty_print_cycle(pp)
-      pp.text "#<#{self.class} {#{empty? ? "" : "..."}}>"
+      pp.text "#<#{self.class} {#{"..." unless empty?}}>"
     end
 
     # @param other [Weak::Set] a weak set

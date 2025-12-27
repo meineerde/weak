@@ -593,7 +593,7 @@ module Weak
 
     # @!visibility private
     def pretty_print_cycle(pp)
-      pp.text "#<#{self.class} {#{empty? ? "" : "..."}}>"
+      pp.text "#<#{self.class} {#{"..." unless empty?}}>"
     end
 
     # Deletes every key-value pair from `self` for which the given block
