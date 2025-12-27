@@ -609,9 +609,9 @@ module Weak
     # @yield [element] calls the given block once for each live object in `self`
     # @yieldparam element [Object] the element to check
     # @return [Enumerator, self, nil] `self` if a block was given and some
-    #    element(s) were deleted, `nil` if a block was given but no keys were
+    #   element(s) were deleted, `nil` if a block was given but no keys were
     #   deleted, or an `Enumerator` if no block was given.
-    # #see #delete_if
+    # @see #delete_if
     def reject!(&block)
       return enum_for(__method__) { size } unless block_given?
 
@@ -633,8 +633,8 @@ module Weak
     # @yield [element] calls the given block once for each element in the set
     # @yieldparam element [Object] the element to check
     # @return [Enumerator, self, nil] `self` if a block was given and some
-    #    element(s) were deleted, `nil` if a block was given but nothing was
-    #    deleted, or an `Enumerator` if no block was given.
+    #   element(s) were deleted, `nil` if a block was given but nothing was
+    #   deleted, or an `Enumerator` if no block was given.
     # @see keep_if
     def select!(&block)
       return enum_for(__method__) { size } unless block_given?
