@@ -3,9 +3,6 @@
 [![gem version badge](https://badge.fury.io/rb/weak.svg)](https://rubygems.org/gems/weak)
 [![github repo badge](https://img.shields.io/badge/github-repo-blue?logo=github)](https://github.com/meineerde/weak)
 
-[![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/meineerde/weak/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak?branch=main)
-
 Weak is a Ruby library which implements collections of unordered values without strong object references.
 
 We provide multiple classes which behave similar to their standard-library counterparts. However, all elements are only weakly referenced. That way, all elements can be garbage collected and silently removed from the collection unless they are still referenced from some other live object.
@@ -214,6 +211,9 @@ end
 ```
 
 ## Development
+
+[![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/meineerde/weak/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak?branch=main)
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bundle exec rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
