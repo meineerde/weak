@@ -157,7 +157,7 @@ During `checkout` we remember a reference to the returned connection object in t
 
 If the caller just "forgets" the connection, our pool will also forget it during the next Ruby garbage collection run.
 
-If the caller returns the connection by calling `checkin` again, we can verify that we have in fact created the object by deleting it from the `@outstanding` list. That way, the a checked-out connection can be checked-in again only once and only if it was initially created by the `ConnectionPool`.
+If the caller returns the connection by calling `checkin` again, we can verify that we have in fact created the object by deleting it from the `@outstanding` list. That way, a checked-out connection can be checked-in again only once and only if it was initially created by the `ConnectionPool`.
 
 ### Weak::Map Example
 
