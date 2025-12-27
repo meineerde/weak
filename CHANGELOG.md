@@ -3,10 +3,12 @@
 ## [Unreleased]
 
 - Fix typos in code documentation
-- Ignore some unnecessary methods defined on some Set implementations in set_spec
+- Ignore some unnecessary methods defined on some `Set` implementations in `set_spec`
 - Run specs on JRuby 10 in Github Actions
 - Retry TruffleRuby rspec runs on Github Actions to avoid random failures due to flakey GC.
 - Extract UNDEFINED to its own file and require it where used.
+- Add more details about the gem version in `Weak::Version`
+- Handle object cycles in `pretty_print`.
 
 ## [0.2.0] - 2025-04-09
 
