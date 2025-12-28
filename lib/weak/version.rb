@@ -7,7 +7,7 @@
 
 ##
 module Weak
-  # Version information about {Weak}}. We follow semantic versioning.
+  # Version information about {Weak}. We follow semantic versioning.
   module Version
     # MAJOR version. It is incremented after incompatible API changes
     MAJOR = 0
