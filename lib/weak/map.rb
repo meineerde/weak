@@ -332,7 +332,7 @@ module Weak
     alias_method :key?, :include?
     alias_method :member?, :include?
     alias_method :length, :size
-    alias_method :store, :[]
+    alias_method :store, :[]=
 
     # {Weak::Map} objects can't be frozen since this is not enforced by the
     # underlying `ObjectSpace::WeakMap` implementation. Thus, we try to signal

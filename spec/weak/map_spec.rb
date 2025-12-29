@@ -336,6 +336,19 @@ RSpec.describe Weak::Map do
       map.each { map[1] = :foo }
       expect(map.to_h).to eq({1 => :foo, 3 => 4, 5 => 6}.compare_by_identity)
     end
+
+    it "is aliased to #store" do
+      # This is more "manual" because Ruby 3.4 distinguishes the method owner,
+      # i.e., the module where the method or alias was defined. In previous
+      # Ruby versions, that didn't matter.
+      expect(map.method(:store)).to have_attributes(
+        owner: Weak::Map,
+        source_location: map.method(:[]=).source_location
+      )
+
+      expect(map.store(:b, 2)).to eq 2
+      expect(map[:b]).to eq 2
+    end
   end
 
   describe "#clear" do

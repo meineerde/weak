@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fix `Weak::Map#store` method alias to `Weak::Map#[]=`. Previously, it was errouneously aliased to `Weak::Map#[]`.
+
 ## [0.2.1] - 2025-12-27
 
 - Fix typos in code documentation
