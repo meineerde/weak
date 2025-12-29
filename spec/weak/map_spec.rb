@@ -80,7 +80,7 @@ RSpec.describe Weak::Map do
       .to be_empty
   end
 
-  describe ".[]]" do
+  describe ".[]" do
     it "returns a new map" do
       expect(Weak::Map[]).to be_instance_of(Weak::Map).and be_empty
       expect(Weak::Map[{}]).to be_instance_of(Weak::Map).and be_empty
