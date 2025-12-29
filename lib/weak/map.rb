@@ -96,7 +96,7 @@ module Weak
     # Here follows the documentation of strategy-specific methods which are
     # implemented in one of the include modules depending on the current Ruby.
 
-    # @!macro _note_object_equality
+    # @!macro weak_map_note_object_equality
     #   @note {Weak::Map} does not test member equality with `==` or `eql?`.
     #     Instead, it always checks strict object equality, so that, e.g.,
     #     different String keys are not considered equal, even if they may
@@ -108,7 +108,7 @@ module Weak
     #     `key` is not found, returns the default value, i.e. the value returned
     #     by the default proc (if defined) or the `default` value (which is
     #     initially `nil`.)
-    #   @!macro _note_object_equality
+    #   @!macro weak_map_note_object_equality
 
     # @!macro weak_map_accessor_write
     #   Associates the given `value` with the given `key`; returns `value`. If
@@ -117,7 +117,7 @@ module Weak
     #   @param key [Object] the key for the set key-value pair
     #   @param value [Object] the value of the set key-value pair
     #   @return [Object] the given `value`
-    #   @!macro _note_object_equality
+    #   @!macro weak_map_note_object_equality
 
     # @!macro weak_map_method_clear
     #   Removes all elements and returns `self`
@@ -136,7 +136,7 @@ module Weak
     #     if the key was not found and no block was given.
     #   @yield [key]
     #   @yieldparam key [Object] the given `key` if it was not part of the map
-    #   @!macro _note_object_equality
+    #   @!macro weak_map_note_object_equality
 
     # @!macro weak_map_method_each_pair
     #   Calls the given block once for each live key in `self`, passing the key
@@ -191,13 +191,13 @@ module Weak
     #     the given block.
     #   @raise [KeyError] if the key can not be found and no block or `default`
     #     value was provided
-    #   @!macro _note_object_equality
+    #   @!macro weak_map_note_object_equality
 
     # @!macro weak_map_method_include_question
     #   @param key [Object] a possible key
     #   @return [Bool] `true` if the given key is included in `self` and has an
     #     associated live value, `false` otherwise
-    #   @!macro _note_object_equality
+    #   @!macro weak_map_note_object_equality
 
     # @!macro weak_map_method_keys
     #   @return [Array] an `Array` containing all keys of the map for which we
@@ -471,7 +471,7 @@ module Weak
     # @param value [Object] a value to check
     # @return [Bool] `true` if `value` is a value in `self`, `false` otherwise
     #
-    # @!macro _note_object_equality
+    # @!macro weak_map_note_object_equality
     def has_value?(value)
       id = value.__id__
       each_value.any? { |v| v.__id__ == id }
@@ -578,7 +578,7 @@ module Weak
     #   `other_maps`
     # @return [Weak::Map] a new weak map containing the merged pairs
     #
-    # @!macro _note_object_equality
+    # @!macro weak_map_note_object_equality
     def merge(*other_maps, &block)
       dup.merge!(*other_maps, &block)
     end
@@ -729,7 +729,7 @@ module Weak
     #   `other_maps`
     # @return [self]
     #
-    # @!macro _note_object_equality
+    # @!macro weak_map_note_object_equality
     def update(*other_maps)
       if block_given?
         missing = Object.new

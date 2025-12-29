@@ -97,7 +97,7 @@ module Weak
     # Here follows the documentation of strategy-specific methods which are
     # implemented in one of the include modules depending on the current Ruby.
 
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     #   @note {Weak::Set} does not test member equality with `==` or `eql?`.
     #     Instead, it always checks strict object equality, so that, e.g.,
     #     different strings are not considered equal, even if they may contain
@@ -131,7 +131,7 @@ module Weak
     #   @param obj [Object]
     #   @return [self, nil] `self` if the given object was deleted from the set
     #     or `nil` if the object was not part of the set
-    #   @!macro _note_object_equality
+    #   @!macro weak_set_note_object_equality
 
     # @!macro weak_set_method_each
     #   Calls the given block once for each live element in `self`, passing that
@@ -148,7 +148,7 @@ module Weak
     #   @param obj [Object] an object
     #   @return [Bool] `true` if the given object is included in `self`, `false`
     #     otherwise
-    #   @!macro _note_object_equality
+    #   @!macro weak_set_note_object_equality
 
     # @!macro weak_set_method_prune
     #   Cleanup data structures from the set to remove data associated with
@@ -253,7 +253,7 @@ module Weak
     # @param enum (see #do_with_enum)
     # @return [Weak::Set] a new weak set built by merging `self` and the elements
     #   of the given enumerable object.
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     #
     # @example
     #     Weak::Set[1, 2, 3] | Weak::Set[2, 4, 5] # => #<Weak::Set {1, 2, 3, 4, 5}>
@@ -271,7 +271,7 @@ module Weak
     # @param enum (see #do_with_enum)
     # @return [Weak::Set] a new weak set built by duplicating `self`, removing
     #   every element that appears in the given enumerable object from that.
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     #
     # @example
     #     Weak::Set[1, 3, 5] - Weak::Set[1, 5]        # => #<Weak::Set {3}>
@@ -284,7 +284,7 @@ module Weak
     # @param enum (see #do_with_enum g)
     # @return [Weak::Set] a new weak set containing elements common to `self`
     #   and the given enumerable object.
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     #
     # @example
     #     Weak::Set[1, 3, 5] & Weak::Set[3, 2, 1]    # => #<Weak::Set {3, 1}>
@@ -303,7 +303,7 @@ module Weak
     #   elements, `-1` / `+1` if `self` is a proper subset / superset of the
     #   given `set`, or `nil` if they both have unique elements or `set` is not
     #   a {Weak::Set}
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     def <=>(other)
       return unless Weak::Set === other
       return 0 if equal?(other)
@@ -349,7 +349,7 @@ module Weak
     #
     # @param enum (see #do_with_enum)
     # @return [Weak::Set] a new weak set
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     #
     # @example
     #     Weak::Set[1, 2] ^ Set[2, 3]           #=> #<Weak::Set {3, 1}>
@@ -368,7 +368,7 @@ module Weak
     # @return [Object, nil] the provided `obj` if it is included in `self`,
     #   `nil` otherwise
     # @see #include?
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     def [](obj)
       obj if include?(obj)
     end
@@ -379,7 +379,7 @@ module Weak
     # @param obj [Object] an object to add to the weak set
     # @return [self, nil] `self` if the object was added, `nil` if it was part
     #   of the set already
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     #
     # @example
     #     Weak::Set[1, 2].add?(3)              #=> #<Weak::Set {1, 2, 3}>
@@ -423,7 +423,7 @@ module Weak
     #
     # @param obj [Object] an object to delete from the weak set
     # @return [self] always returns self
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     def delete(obj)
       delete?(obj)
       self
@@ -450,7 +450,7 @@ module Weak
     # @param enum (see #intersect)
     # @return [Bool] `true` if `self` and the given `enum` have no element in
     #   common. This method is the opposite of {#intersect?}.
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     def disjoint?(enum)
       !intersect?(enum)
     end
@@ -490,7 +490,7 @@ module Weak
     # @param enum (see #enumerable)
     # @return [Bool] `true` if `self` and the given enumerable object have at
     #   least one element in common, `false` otherwise
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     #
     # @example
     #     Weak::Set[1, 2, 3].intersect? Weak::Set[4, 5]   #=> false
@@ -584,7 +584,7 @@ module Weak
     # @param other [Weak::Set] a weak set
     # @return [Bool] `true` if `self` is a proper superset of the given `set`,
     #   `false` otherwise
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     # @see superset?
     def proper_superset?(other)
       if Weak::Set === other
@@ -651,7 +651,7 @@ module Weak
     # @param other [Weak::Set] a weak set
     # @return [Bool] `true` if `self` is a subset of the given `set`, `false`
     #   otherwise
-    # @!macro _note_object_equality
+    # @!macro weak_set_note_object_equality
     # @see proper_subset?
     def subset?(other)
       if Weak::Set === other
