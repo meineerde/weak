@@ -1,7 +1,13 @@
 # Weak
 
 [![gem version badge](https://badge.fury.io/rb/weak.svg)](https://rubygems.org/gems/weak)
-[![github repo badge](https://img.shields.io/badge/github-repo-blue?logo=github)](https://github.com/meineerde/weak)
+[![license badge](https://img.shields.io/badge/license-MIT-brightgreen.svg)](#license)
+[![github repo badge](https://img.shields.io/badge/github-meineerde/weak-blue.svg)](https://github.com/meineerde/weak)
+[![documentation badge](https://img.shields.io/badge/docs-rubydoc.info-blue.svg)](https://www.rubydoc.info/gems/weak)
+
+[![code style: standard badge](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standardrb/standard)
+[![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/meineerde/weak/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak?branch=main)
 
 Weak is a Ruby library which implements collections of unordered values without strong object references.
 
@@ -212,14 +218,9 @@ end
 
 ## Development
 
-[![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/meineerde/weak/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak?branch=main)
-
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bundle exec rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-[![code style: standard badge](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standardrb/standard)
-
-We follow the Standard Ruby style. Please make sure that all code is formatted according to the Standard rules. This is enforced by the CI. Please try to keep all code lines at or below 100 characters in length.
+We follow the [Standard Ruby code style](https://github.com/standardrb/standard). Please make sure that all code is formatted according to the Standard rules. This is enforced by the CI. Please try to keep all code lines at or below 100 characters in length.
 
 ## Contributing
 
