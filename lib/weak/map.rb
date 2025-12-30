@@ -341,7 +341,7 @@ module Weak
     #
     # @param freeze [Bool, nil] ignored; we always behave as if this is false.
     #   If this is set to a truethy value, we emit a warning.
-    # @return [Weak::Set] a new `Weak::Map` object containing the same elements
+    # @return [Weak::Map] a new `Weak::Map` object containing the same elements
     #   as `self`
     def clone(freeze: false)
       warn("Can't freeze #{self.class}") if freeze
@@ -457,7 +457,7 @@ module Weak
       size == 0
     end
 
-    # {Weak::Set} objects can't be frozen since this is not enforced by the
+    # {Weak::Map} objects can't be frozen since this is not enforced by the
     # underlying `ObjectSpace::WeakMap` implementation. Thus, we try to signal
     # this by not actually setting the `frozen?` flag and ignoring attempts to
     # freeze us with just a warning.
