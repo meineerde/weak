@@ -54,7 +54,7 @@ module Weak
 
       # Checks if this strategy is usable for the current Ruby version.
       #
-      # @return [Bool] always `true` to indicate that this stragegy should be
+      # @return [Bool] always `true` to indicate that this strategy should be
       #   usable with any Ruby implementation which provides an
       #   `ObjectSpace::WeakMap`.
       def self.usable?
