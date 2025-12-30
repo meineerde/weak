@@ -21,8 +21,7 @@ module Weak
     # either of them vanishes, the entry is removed.
     #
     # The `ObjectSpace::WeakMap` also allows to delete entries. This allows us
-    # to directly use the `ObjectSpace::WeakMap` as a storage the same way a
-    # `Set` uses a `Hash` object object as storage.
+    # to directly use the `ObjectSpace::WeakMap` as a storage object.
     module WeakKeysWithDelete
       # Checks if this strategy is usable for the current Ruby version.
       #
