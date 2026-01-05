@@ -212,15 +212,16 @@ module Weak
     INSPECT_KEY = :__inspect_key__
     private_constant :INSPECT_KEY
 
-    # @param ary [Array<Object>] a list of objects
+    # @param objects [Array<Object>] a list of objects
     # @return [Weak::Set] a new weak set containing the given objects
+    # @see #initialize
     #
     # @example
     #     Weak::Set[1, 2]                   # => #<Weak::Set {1, 2}>
     #     Weak::Set[1, 2, 1]                # => #<Weak::Set {1, 2}>
     #     Weak::Set[1, :c, :s]              # => #<Weak::Set {1, :c, :s}>
-    def self.[](*ary)
-      new(ary)
+    def self.[](*objects)
+      new(objects)
     end
 
     # @param enum (see #do_with_enum)
