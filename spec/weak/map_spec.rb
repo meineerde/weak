@@ -61,16 +61,14 @@ RSpec.describe Weak::Map do
     end
   end
 
-  context "with strategies" do
-    it "implement the same methods" do
-      [
-        Weak::Map::WeakKeysWithDelete,
-        Weak::Map::WeakKeys,
-        Weak::Map::StrongKeys,
-        Weak::Map::StrongSecondaryKeys
-      ].each_cons(2) do |s1, s2|
-        expect(s1.instance_methods.sort).to match s2.instance_methods.sort
-      end
+  it "implement the same methods for all strategies" do
+    [
+      Weak::Map::WeakKeysWithDelete,
+      Weak::Map::WeakKeys,
+      Weak::Map::StrongKeys,
+      Weak::Map::StrongSecondaryKeys
+    ].each_cons(2) do |s1, s2|
+      expect(s1.instance_methods.sort).to match s2.instance_methods.sort
     end
   end
 

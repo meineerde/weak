@@ -26,6 +26,7 @@ else
   RSpec::Core::RakeTask.new(:spec) do |t|
     t.rspec_opts = %w[
       --format documentation
+      --warnings
       --order rand
     ]
   end

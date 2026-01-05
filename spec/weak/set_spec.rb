@@ -19,16 +19,14 @@ RSpec.describe Weak::Set do
 
   let(:set) { Weak::Set.new }
 
-  context "with strategies" do
-    it "implement the same methods" do
-      [
-        Weak::Set::WeakKeysWithDelete,
-        Weak::Set::WeakKeys,
-        Weak::Set::StrongKeys,
-        Weak::Set::StrongSecondaryKeys
-      ].each_cons(2) do |s1, s2|
-        expect(s1.instance_methods.sort).to match s2.instance_methods.sort
-      end
+  it "implement the same methods for all strategies" do
+    [
+      Weak::Set::WeakKeysWithDelete,
+      Weak::Set::WeakKeys,
+      Weak::Set::StrongKeys,
+      Weak::Set::StrongSecondaryKeys
+    ].each_cons(2) do |s1, s2|
+      expect(s1.instance_methods.sort).to match s2.instance_methods.sort
     end
   end
 
