@@ -195,7 +195,7 @@ RSpec.describe Weak::Set do
     end
   end
 
-  describe "&" do
+  describe "#&" do
     let(:set) { Weak::Set[:foo, :bar] }
 
     it "returns the intersection of elements" do
