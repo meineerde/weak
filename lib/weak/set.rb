@@ -473,15 +473,15 @@ module Weak
     end
 
     # @return [String] a string containing a human-readable representation of
-    #   the weak set, e.g., `"#<Weak::Set {element1, element2, ...}>"`
+    #   the weak set, e.g., `"Weak::Set[element1, element2, ...]"`
     def inspect
       object_ids = (Thread.current[INSPECT_KEY] ||= [])
-      return "#<#{self.class} {...}>" if object_ids.include?(object_id)
+      return "#{self.class}[...]" if object_ids.include?(object_id)
 
       object_ids << object_id
       begin
         elements = to_a.sort_by!(&:__id__).inspect[1..-2]
-        "#<#{self.class} {#{elements}}>"
+        "#{self.class}[#{elements}]"
       ensure
         object_ids.pop
       end
@@ -550,19 +550,16 @@ module Weak
 
     # @!visibility private
     def pretty_print(pp)
-      pp.group(1, "#<#{self.class}", ">") do
-        pp.breakable
-        pp.group(1, "{", "}") do
-          pp.seplist(to_a.sort_by!(&:__id__)) do |obj|
-            pp.pp obj
-          end
+      pp.group(1, "#{self.class}[", "]") do
+        pp.seplist(to_a.sort_by!(&:__id__)) do |obj|
+          pp.pp obj
         end
       end
     end
 
     # @!visibility private
     def pretty_print_cycle(pp)
-      pp.text "#<#{self.class} {#{"..." unless empty?}}>"
+      pp.text "#{self.class}[#{"..." unless empty?}]"
     end
 
     # @param other [Weak::Set] a weak set

@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Adapt `Weak::Set#inspect` output to more resemble the output of `Set#inspect` in Ruby 4.0
 - Fix `Weak::Map#store` method alias to `Weak::Map#[]=`. Previously, it was errouneously aliased to `Weak::Map#[]`.
 - Fix typos in code documentation
 
