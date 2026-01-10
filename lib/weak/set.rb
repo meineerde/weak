@@ -474,6 +474,9 @@ module Weak
 
     # @return [String] a string containing a human-readable representation of
     #   the weak set, e.g., `"Weak::Set[element1, element2, ...]"`
+    # @note The elements of the set are ordered by their object id in the
+    #   inspect output. If we detect a reference cycle (e.g. with a set
+    #   containing itself), we output `"Weak::Set[...]"`.
     def inspect
       object_ids = (Thread.current[INSPECT_KEY] ||= [])
       return "#{self.class}[...]" if object_ids.include?(object_id)
