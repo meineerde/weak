@@ -71,11 +71,11 @@ module Weak
   # @example
   #   require "weak/set"
   #
-  #   s1 = Weak::Set[1, 2]                  #=> #<Weak::Set {1, 2}>
-  #   s2 = Weak::Set.new [1, 2]             #=> #<Weak::Set {1, 2}>
+  #   s1 = Weak::Set[1, 2]                  #=> Weak::Set[1, 2]
+  #   s2 = Weak::Set.new [1, 2]             #=> Weak::Set[1, 2]
   #   s1 == s2                              #=> true
-  #   s1.add(:foo)                          #=> #<Weak::Set {1, 2, :foo}>
-  #   s1.merge([2, 6])                      #=> #<Weak::Set {1, 2, :foo, 6}>
+  #   s1.add(:foo)                          #=> Weak::Set[1, 2, :foo]
+  #   s1.merge([2, 6])                      #=> Weak::Set[1, 2, 6, :foo]
   #   s1.subset?(s2)                        #=> false
   #   s2.subset?(s1)                        #=> true
   class Set
@@ -115,9 +115,9 @@ module Weak
     #   @return [self]
     #
     #   @example
-    #       Weak::Set[1, 2].add(3)                #=> #<Weak::Set {1, 2, 3}>
-    #       Weak::Set[1, 2].add([3, 4])           #=> #<Weak::Set {1, 2, [3, 4]}>
-    #       Weak::Set[1, 2].add(2)                #=> #<Weak::Set {1, 2}>
+    #       Weak::Set[1, 2].add(3)                #=> Weak::Set[1, 2, 3]
+    #       Weak::Set[1, 2].add([3, 4])           #=> Weak::Set[1, 2, [3, 4]]
+    #       Weak::Set[1, 2].add(2)                #=> Weak::Set[1, 2]
 
     # @!macro weak_set_method_clear
     #   Removes all elements and returns `self`
@@ -164,9 +164,9 @@ module Weak
     #   @param enum (see #do_with_enum)
     #   @return [self]
     #   @example
-    #       set = Weak::Set[1, :c, :s]        #=> #<Weak::Set {1, :c, :s}>
-    #       set.replace([1, 2])               #=> #<Weak::Set {1, 2}>
-    #       set                               #=> #<Weak::Set {1, 2}>
+    #       set = Weak::Set[1, :c, :s]        #=> Weak::Set[1, :c, :s]
+    #       set.replace([1, 2])               #=> Weak::Set[1, 2]
+    #       set                               #=> Weak::Set[1, 2]
 
     # @!macro weak_set_method_size
     #   @return [Integer] the number of live elements in `self`
@@ -217,9 +217,9 @@ module Weak
     # @see #initialize
     #
     # @example
-    #     Weak::Set[1, 2]                   # => #<Weak::Set {1, 2}>
-    #     Weak::Set[1, 2, 1]                # => #<Weak::Set {1, 2}>
-    #     Weak::Set[1, :c, :s]              # => #<Weak::Set {1, :c, :s}>
+    #     Weak::Set[1, 2]                   # => Weak::Set[1, 2]
+    #     Weak::Set[1, 2, 1]                # => Weak::Set[1, 2]
+    #     Weak::Set[1, :c, :s]              # => Weak::Set[1, :c, :s]
     def self.[](*objects)
       new(objects)
     end
@@ -257,8 +257,8 @@ module Weak
     # @!macro weak_set_note_object_equality
     #
     # @example
-    #     Weak::Set[1, 2, 3] | Weak::Set[2, 4, 5] # => #<Weak::Set {1, 2, 3, 4, 5}>
-    #     Weak::Set[1, 3, :z] | (1..4)            # => #<Weak::Set {1, 3, :z, 2, 4}>
+    #     Weak::Set[1, 2, 3] | Weak::Set[2, 4, 5] # => Weak::Set[1, 2, 3, 4, 5]
+    #     Weak::Set[1, 3, :z] | (1..4)            # => Weak::Set[1, 2, 3, 4, :z]
     def |(enum)
       new_set = dup
       do_with_enum(enum) do |obj|
@@ -275,8 +275,8 @@ module Weak
     # @!macro weak_set_note_object_equality
     #
     # @example
-    #     Weak::Set[1, 3, 5] - Weak::Set[1, 5]        # => #<Weak::Set {3}>
-    #     Weak::Set['a', 'b', 'z'] - ['a', 'c']       # => #<Weak::Set {"b", "z"}>
+    #     Weak::Set[1, 3, 5] - Weak::Set[1, 5]        # => Weak::Set[3]
+    #     Weak::Set['a', 'b', 'z'] - ['a', 'c']       # => Weak::Set["b", "z"]
     def -(enum)
       dup.subtract(enum)
     end
@@ -288,8 +288,8 @@ module Weak
     # @!macro weak_set_note_object_equality
     #
     # @example
-    #     Weak::Set[1, 3, 5] & Weak::Set[3, 2, 1]    # => #<Weak::Set {3, 1}>
-    #     Weak::Set[1, 2, 9] & [2, 1, 3]             # => #<Weak::Set {1, 2}>
+    #     Weak::Set[1, 3, 5] & Weak::Set[3, 2, 1]    # => Weak::Set[1, 3]
+    #     Weak::Set[1, 2, 9] & [2, 1, 3]             # => Weak::Set[1, 2]
     def &(enum)
       new_set = self.class.new
       do_with_enum(enum) do |obj|
@@ -353,8 +353,8 @@ module Weak
     # @!macro weak_set_note_object_equality
     #
     # @example
-    #     Weak::Set[1, 2] ^ Set[2, 3]           #=> #<Weak::Set {3, 1}>
-    #     Weak::Set[1, :b, :c] ^ [:b, :d]       #=> #<Weak::Set {:d, 1, :c}>
+    #     Weak::Set[1, 2] ^ Set[2, 3]           #=> Weak::Set[1, 3]
+    #     Weak::Set[1, :b, :c] ^ [:b, :d]       #=> Weak::Set[1, :c, :d]
     def ^(enum)
       return dup if enum.nil?
 
@@ -383,8 +383,8 @@ module Weak
     # @!macro weak_set_note_object_equality
     #
     # @example
-    #     Weak::Set[1, 2].add?(3)              #=> #<Weak::Set {1, 2, 3}>
-    #     Weak::Set[1, 2].add?([3, 4])         #=> #<Weak::Set {1, 2, [3, 4]}>
+    #     Weak::Set[1, 2].add?(3)              #=> Weak::Set[1, 2, 3]
+    #     Weak::Set[1, 2].add?([3, 4])         #=> Weak::Set[1, 2, [3, 4]]
     #     Weak::Set[1, 2].add?(2)              #=> nil
     def add?(obj)
       add(obj) unless include?(obj)

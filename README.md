@@ -29,13 +29,13 @@ require "weak/set"
 set = Weak::Set.new
 
 set << "some string"
-# => #<Weak::Set {"some string"}>
+# => Weak::Set["some string"]
 
 # Do some work, wait a bit, or force a garbage collection run
 3.times { GC.start }
 
 set
-# => #<Weak::Set {}>
+# => Weak::Set[]
 ```
 
 ## Weak::Map
