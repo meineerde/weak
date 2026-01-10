@@ -537,7 +537,7 @@ module Weak
     #     h1 = {baz: 3, bar: 4}
     #     h2 = {bam: 5, baz: 6}
     #     map.merge(h1, h2)
-    #     # => #<Weak::Map {:foo=>0, :bar=>4, :baz=>6, :bam=>5}
+    #     # => #<Weak::Map {:foo=>0, :bar=>4, :baz=>6, :bam=>5}>
     #
     # With arguments and a block:
     #
@@ -559,7 +559,7 @@ module Weak
     #     h1 = {baz: 3, bar: 4}
     #     h2 = {bam: 5, baz: 6}
     #     map.merge(h1, h2) { |key, old_value, new_value| old_value + new_value }
-    #     # => #<Weak::Map {:foo=>0, :bar=>5, :baz=>9, :bam=>5}
+    #     # => #<Weak::Map {:foo=>0, :bar=>5, :baz=>9, :bam=>5}>
     #
     # With no arguments:
     #
@@ -688,7 +688,7 @@ module Weak
     #     h1 = {baz: 3, bar: 4}
     #     h2 = {bam: 5, baz: 6}
     #     map.update(h1, h2)
-    #     # => #<Weak::Map {:foo=>0, :bar=>4, :baz=>6, :bam=>5}
+    #     # => #<Weak::Map {:foo=>0, :bar=>4, :baz=>6, :bam=>5}>
     #
     # With arguments and a block:
     #
@@ -710,7 +710,7 @@ module Weak
     #     h1 = {baz: 3, bar: 4}
     #     h2 = {bam: 5, baz: 6}
     #     map.update(h1, h2) { |key, old_value, new_value| old_value + new_value }
-    #     # => #<Weak::Map {:foo=>0, :bar=>5, :baz=>9, :bam=>5}
+    #     # => #<Weak::Map {:foo=>0, :bar=>5, :baz=>9, :bam=>5}>
     #
     # With no arguments:
     #
