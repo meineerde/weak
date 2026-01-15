@@ -106,6 +106,7 @@ A Weak::Set can be used as a cache or for validation purposes were it is not des
 
 ```ruby
 require "weak/set"
+require "thread"
 
 class Connection
   # A sample connection class.
@@ -174,6 +175,9 @@ Even if a single object is wrapped in multiple `LockedObject` instances, we stil
 If all LockedObject instances for an `obj` and the `obj` itself vanish by being garbage collected, the associated mutex will also be garbage collected without requiring any external coordination.
 
 ```ruby
+require "weak/map"
+require "thread"
+
 class LockedObject < BasicObject
   LOCKS = Weak::Map.new
   LOCKS_MUTEX = Mutex.new
