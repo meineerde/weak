@@ -5,6 +5,7 @@
 - Adapt `Weak::Set#inspect` output to more resemble the output of `Set#inspect` in Ruby 4.0
 - Fix `Weak::Map#store` method alias to `Weak::Map#[]=`. Previously, it was errouneously aliased to `Weak::Map#[]`.
 - Fix typos in code documentation
+- Use require_relative instead of require for all gem files
 
 ## [0.2.1] - 2025-12-27
 

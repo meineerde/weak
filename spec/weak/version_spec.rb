@@ -6,7 +6,6 @@
 # of the MIT license. See the LICENSE.txt file for details.
 
 require "spec_helper"
-require "weak/version"
 
 RSpec.describe "Weak::Version" do
   it "defines a major version" do

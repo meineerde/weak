@@ -7,8 +7,6 @@
 
 require "spec_helper"
 
-require "weak/undefined"
-
 RSpec.describe "Weak::UNDEFINED" do
   it "is a singleton instance of UndefinedClass" do
     expect(Weak::UNDEFINED)
