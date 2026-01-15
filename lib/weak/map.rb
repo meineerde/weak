@@ -288,7 +288,7 @@ module Weak
     # The initial default value and initial default proc for the new hash depend
     # on which form above was used.
     #
-    # If neither an `default_value` nor a block is given, initializes both the
+    # If neither a `default_value` nor a block is given, initializes both the
     # default value and the default proc to nil:
     #
     #     map = Weak::Map.new
@@ -399,7 +399,7 @@ module Weak
     # Sets the default proc for self to `proc` and clears the {#default} value.
     #
     # @param proc [Proc, #to_proc nil] a `Proc` which can be called with two
-    #   arguments: the map and the rquested non-exiting key. The proc is
+    #   arguments: the map and the requested non-exiting key. The proc is
     #   expected to return the default value for the key. Whe giving `nil`, the
     #   default proc is cleared.
     # @return [Proc, nil] the new default proc
