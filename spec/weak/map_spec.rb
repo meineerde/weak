@@ -814,13 +814,13 @@ RSpec.describe Weak::Map do
       end
     end
 
-    it "returns an Enumerator if called on a non-empty hash without a block" do
+    it "returns an Enumerator if called on a non-empty map without a block" do
       expect(map.each_value)
         .to be_instance_of(Enumerator)
         .and have_attributes(size: 2)
     end
 
-    it "returns an Enumerator if called on an empty hash without a block" do
+    it "returns an Enumerator if called on an empty map without a block" do
       expect(Weak::Map.new.each_value)
         .to be_instance_of(Enumerator)
         .and have_attributes(size: 0)
@@ -1000,7 +1000,7 @@ RSpec.describe Weak::Map do
   end
 
   describe "#empty?" do
-    it "returns false for a populated msp" do
+    it "returns false for a populated map" do
       map[:a] = 1
       expect(map.empty?).to be false
     end
