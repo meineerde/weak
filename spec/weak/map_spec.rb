@@ -646,6 +646,12 @@ RSpec.describe Weak::Map do
       expect(Weak::Map.new { :default }.delete(:b) { 5 }).to eq 5
     end
 
+    it "does not call the block for nil values" do
+      map[:a] = nil
+      expect { |b| map.delete(:a, &b) }.not_to yield_control
+      expect(map).to be_empty
+    end
+
     it "returns nil if the key is not found when no block is given" do
       map[:a] = 1
 
