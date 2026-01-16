@@ -106,7 +106,6 @@ A Weak::Set can be used as a cache or for validation purposes were it is not des
 
 ```ruby
 require "weak/set"
-require "thread"
 
 class Connection
   # A sample connection class.
@@ -176,7 +175,6 @@ If all LockedObject instances for an `obj` and the `obj` itself vanish by being 
 
 ```ruby
 require "weak/map"
-require "thread"
 
 class LockedObject < BasicObject
   LOCKS = Weak::Map.new
