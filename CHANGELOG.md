@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Update changelog of 0.3.0 release
+
+## [0.3.0] - 2026-01-16
+
 ### Features
 
 - Add `Weak::Cache` as a thread-safe wrapper around `Weak::Map` to provide an object cache.
