@@ -13,10 +13,10 @@ module Weak
     MAJOR = 0
     # MINOR version. It is incremented after adding functionality in a
     # backwards-compatible manner
-    MINOR = 2
+    MINOR = 3
     # PATCH version. It is incremented when making backwards-compatible
     # bug-fixes.
-    PATCH = 1
+    PATCH = 0
     # PRERELEASE suffix. Set to a alphanumeric string on any pre-release
     # versions like beta or RC releases; `nil` on regular releases
     PRERELEASE = nil
