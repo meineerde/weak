@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## Features
+### Features
 
 - Add `Weak::Cache` as a thread-safe wrapper around `Weak::Map` to provide an object cache.
 
@@ -16,6 +16,7 @@
 - Fix typos in code documentation
 - Use `require_relative` instead of require for all gem files
 - Add addititional specs for `Weak::Map`
+- Clarify humanistic usage policy
 
 ## [0.2.1] - 2025-12-27
 
