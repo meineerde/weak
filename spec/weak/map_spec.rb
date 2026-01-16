@@ -743,6 +743,7 @@ RSpec.describe Weak::Map do
       expect(map.dup)
         .to be_a(Weak::Map)
         .and not_equal(map)
+        .and not_be_frozen
         .and have_attributes(to_h: {a: 1}.compare_by_identity)
 
       dup = map.dup
