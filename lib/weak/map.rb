@@ -482,18 +482,25 @@ module Weak
     #   the weak set, e.g.,
     #   `"#<Weak::Map {key1 => value1, key2 => value2, ...}>"`
     def inspect
-      object_ids = (Thread.current[INSPECT_KEY] ||= [])
-      return "#<#{self.class} {...}>" if object_ids.include?(object_id)
+      "#<#{self.class} #{_inspect}>"
+    end
+    alias_method :to_s, :inspect
 
-      object_ids << object_id
+    # @return [String] a string containing a human-readable representation of
+    #   just the data of the weak set, e.g.,
+    #   `"{key1 => value1, key2 => value2, ...}"`
+    # @!visibility private
+    def _inspect
+      object_ids = (Thread.current[INSPECT_KEY] ||= [])
+      return "{...}" if object_ids.include?(__id__)
+
+      object_ids << __id__
       begin
-        elements = to_a.sort_by! { |k, _v| k.__id__ }.to_h
-        "#<#{self.class} #{elements}>"
+        to_a.sort_by! { |k, _v| k.__id__ }.to_h.inspect
       ensure
         object_ids.pop
       end
     end
-    alias_method :to_s, :inspect
 
     # Deletes every key-value pair from `self` for which the given block
     # evaluates to a falsey value.
