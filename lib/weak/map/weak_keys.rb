@@ -66,7 +66,8 @@ module Weak
         return enum_for(__method__) { size } unless block_given?
 
         @map.keys.each do |key|
-          yield key unless missing?(@map[key])
+          raw_value = @map[key]
+          yield key unless missing?(raw_value)
         end
         self
       end
