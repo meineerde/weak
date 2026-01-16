@@ -28,8 +28,7 @@ module Weak
       # @return [Bool] truethy for Ruby (aka. MRI, aka. YARV) >= 3.3.0,
       #   falsey otherwise
       def self.usable?
-        RUBY_ENGINE == "ruby" &&
-          ObjectSpace::WeakMap.instance_methods.include?(:delete)
+        RUBY_ENGINE == "ruby" && ObjectSpace::WeakMap.method_defined?(:delete)
       end
 
       # @!macro weak_map_accessor_read
