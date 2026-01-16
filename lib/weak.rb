@@ -8,6 +8,7 @@
 require_relative "weak/version"
 require_relative "weak/map"
 require_relative "weak/set"
+require_relative "weak/cache"
 
 # Weak is a Ruby library which implements collections of unordered values
 # without strong object references.

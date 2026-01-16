@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## Features
+
+- Add `Weak::Cache` as a thread-safe wrapper around `Weak::Map` to provide an object cache.
+
 ### Bug Fixes
 
 - Fix `Weak::Map#store` method alias to `Weak::Map#[]=`. Previously, it was errouneously aliased to `Weak::Map#[]`.

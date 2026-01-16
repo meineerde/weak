@@ -34,7 +34,8 @@ module Weak
   #
   # Note that {Weak::Map} is not inherently thread-safe. When accessing a
   # {Weak::Map} from multiple threads or fibers, you MUST use a mutex or another
-  # locking mechanism.
+  # locking mechanism. You can also use {Weak::Cache} as a thread-safe
+  # alternative.
   #
   # ## Implementation Details
   #
