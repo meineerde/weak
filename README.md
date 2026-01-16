@@ -289,9 +289,15 @@ We follow the [Standard Ruby code style](https://github.com/standardrb/standard)
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/meineerde/weak. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/meineerde/weak/blob/main/CODE_OF_CONDUCT.md).
 
-## License
+## License and Usage Policy
 
-The gem is available as open source under the terms of the [MIT License](https://github.com/meineerde/weak/blob/main/LICENSE.txt).
+Weak is available as free and open source under the terms of the [MIT License](https://github.com/meineerde/weak/blob/main/LICENSE.txt).
+
+This license does not preclude you from using Weak with AI-encumbered or AI-associated projects, but you do not have the author's consent to do so. This may seem like a contradiction, but copyright is a blunt tool that does not in general have the humanistic nuance to describe something like "you can legally do this thing, but if you do, you're an asshole."
+
+We also explicitly affirm: Trans Rights Are Human Rights. If you do not agree, please refrain from using Weak.
+
+(Thanks to [Cassandra Granade](https://codeberg.org/cgranade/do#license-and-ai-policy) for the inspiration.)
 
 ## Code of Conduct
 
