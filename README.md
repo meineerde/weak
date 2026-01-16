@@ -17,7 +17,10 @@ We provide multiple classes which behave similar to their standard-library count
 
 `Weak::Set` behaves similar to the [Set](https://docs.ruby-lang.org/en/3.4/Set.html) class of the Ruby standard library, but all values are only weakly referenced. That way, all values can be garbage collected and silently removed from the set unless they are still referenced from some other live object.
 
-Compared to the `Set` class however, there are a few differences:
+> [!CAUTION]
+> `Weak::Set` objects are not inherently thread-safe. When accessing a weak set from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
+
+Compared to the `Set` class, there are a few differences:
 
   - All element references are weak, allowing each element to be garbage collected unless there is a strong reference to it somwhere else.
   - We do not necessarily retain the order of elements as they are inserted into the `Weak::Set`. You should not rely on a specific order.
@@ -43,7 +46,10 @@ set
 `Weak::Map` behaves similar to a `Hash` or an `ObjectSpace::WeakMap` in Ruby (aka. MRI, aka. YARV). 
 Both keys and values are weak references, allowing either of them to be garbage collected. If either the key or the value of a pair is garbage collected, the entire pair will be removed from the `Weak::Map`.
 
-Compared to the `Hash` class however, there are a few differences:
+> [!CAUTION]
+> `Weak::Map` objects are not inherently thread-safe. When accessing a weak map from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
+
+Compared to the `Hash` class, there are a few differences:
 
   - Key and value references are weak, allowing each key-value pair to be garbage collected unless there is a strong reference to boith the key and the value somewhere else.
   - We do not necessarily retain the order of elements as they are inserted into the `Weak::Map`. You should not rely on a specific order.
@@ -64,15 +70,35 @@ map
 # => #<Weak::Map {}>
 ```
 
+## Weak::Cache
+
+`Weak::Cache` is a thread-safe wrapper around `Weak::Map`. The class behaves similar to an `ActiveSupport::Cache::Store`.
+
+> [!TIP]
+> `Weak::Cache` objects can safely be used from multiple threads and fibers concurrently without any additional locks.
+
+Similar to a `Weak:Map`, both keys and values are weak references. Cache entries are removed if either the key of the value is garbage collected.
+
+```ruby
+require "weak/cache"
+cache = Weak::Cache.new
+
+# By default, we return nil for missing keys
+cache[:key] # => nil
+
+# With fetch, we can get a key and if it's missing, write a value for it
+cache.fetch(:key) { |key| key.upcase } # => :KEY
+
+# The value stored in the fetch above is stored in the cache
+cache[:key] # => :KEY
+```
+
 ## Usage
 
 Please refer to the documentation at:
 
 - [📘 Documentation](https://www.rubydoc.info/gems/weak)
 - [💥 Development Documentation](https://www.rubydoc.info/github/meineerde/weak) of the [main branch](https://github.com/meineerde/weak/tree/main)
-
-> [!WARNING]
-> The Weak collections are not inherently thread-safe. When accessing a collection from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
 
 The Weak collections use Ruby's [ObjectSpace::WeakMap](https://docs.ruby-lang.org/en/3.4/ObjectSpace/WeakMap.html) under the hood. Unfortunately, different Ruby implementations and versions such as Ruby (aka. MRI, aka. YARV), JRuby, or TruffleRuby show quite diverse behavior in their respective `ObjectSpace::WeakMap` implementations. To provide a unified behavior on all supported Rubies, we use multiple different storage strategies.
 
@@ -217,6 +243,41 @@ string = "foo"
   end
 end
 ```
+
+### Weak::Cache Example
+
+We can simplify the above example by using `Weak::Cache`.
+
+```ruby
+require "weak/cache"
+
+class LockedObject < BasicObject
+  LOCKS = Weak::Cache.new
+
+  def initialize(obj)
+    @obj = obj
+    @mutex = LOCKS.fetch(obj) { Mutex.new }
+  end
+
+  private
+
+  def method_missing(m, *args, **kwargs, &block)
+    @mutex.synchronize do
+      obj.public_send(m, *args, **kwargs, &block)
+    end
+  end
+
+  def respond_to_missing?(m)
+    obj.respond_to?(m)
+  end
+end
+```
+
+The `LockedObject` class we have defined here works exactly the same the the one in the `Weak::Map` example above. However, it avoids having to use a separate mutex for  accessing the `LOCKS` cache.
+
+In our `LockedObject#initialize`, if the given object already has an associated mutex in the `LOCKS` cache, we return it directly. If there was no previous mutex however, the `fetch` method will call the provided block and will store the result (i.e. the new `Mutex`) in the cache and return it.
+
+Subsequent invocations of `fetch` will return the same mutex again, unless it was garbage collected in the meantime.
 
 ## Development
 
