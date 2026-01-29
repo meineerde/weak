@@ -65,6 +65,7 @@ module Weak
       @mutex.synchronize { super }
     end
 
+    # (see Weak::Map#each_key)
     def each_key(&block)
       return enum_for(__method__) { size } unless block_given?
       keys.each(&block)
@@ -122,6 +123,9 @@ module Weak
       self
     end
 
+    # @return [String] a string containing a human-readable representation of
+    #   the weak cache, e.g.,
+    #   `"#<Weak::Cache {key1 => value1, key2 => value2, ...}>"`
     def inspect
       @mutex.synchronize { "#<#{self.class} #{@map._inspect}>" }
     end
@@ -155,6 +159,7 @@ module Weak
     end
     alias_method :[], :read
 
+    # (see Weak::Map#size)
     def size
       @mutex.synchronize { @map.size }
     end
