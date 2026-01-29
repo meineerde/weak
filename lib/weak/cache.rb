@@ -83,8 +83,8 @@ module Weak
     alias_method :include?, :exist?
     alias_method :key?, :exist?
 
-    # Fetches data from the cache, using the given `key`. If there is a value in
-    # the cache for the given key, that value is returned.
+    # Fetches or sets data from the cache, using the given `key`. If there is a
+    # value in the cache for the given key, that value is returned.
     #
     # If there is no value in the cache (a cache miss), then the given block
     # will be passed the key and executed in the event of a cache miss. The
