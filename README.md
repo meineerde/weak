@@ -1,7 +1,7 @@
 # Weak
 
 [![gem version badge](https://badge.fury.io/rb/weak.svg)](https://rubygems.org/gems/weak)
-[![license badge](https://img.shields.io/badge/license-MIT-brightgreen.svg)](#license)
+[![license badge](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/meineerde/weak/blob/main/LICENSE.txt)
 [![github repo badge](https://img.shields.io/badge/github-meineerde/weak-blue.svg)](https://github.com/meineerde/weak)
 [![documentation badge](https://img.shields.io/badge/docs-rubydoc.info-blue.svg)](https://www.rubydoc.info/gems/weak)
 
