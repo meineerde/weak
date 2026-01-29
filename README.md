@@ -47,7 +47,7 @@ set
 Both keys and values are weak references, allowing either of them to be garbage collected. If either the key or the value of a pair is garbage collected, the entire pair will be removed from the `Weak::Map`.
 
 > [!CAUTION]
-> `Weak::Map` objects are not inherently thread-safe. When accessing a weak map from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
+> `Weak::Map` objects are not inherently thread-safe. When accessing a weak map from multiple threads or fibers, you MUST use a mutex or another locking mechanism. You can also use `Weak::Cache` as a thread-safe option.
 
 Compared to the `Hash` class, there are a few differences:
 
