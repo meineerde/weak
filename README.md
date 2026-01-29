@@ -15,7 +15,7 @@ We provide multiple classes which behave similar to their standard-library count
 
 ## Weak::Set 
 
-`Weak::Set` behaves similar to the [Set](https://docs.ruby-lang.org/en/3.4/Set.html) class of the Ruby standard library, but all values are only weakly referenced. That way, all values can be garbage collected and silently removed from the set unless they are still referenced from some other live object.
+[`Weak::Set`](https://www.rubydoc.info/gems/weak/Weak/Set) behaves similar to the [Set](https://docs.ruby-lang.org/en/3.4/Set.html) class of the Ruby standard library, but all values are only weakly referenced. That way, all values can be garbage collected and silently removed from the set unless they are still referenced from some other live object.
 
 > [!CAUTION]
 > `Weak::Set` objects are not inherently thread-safe. When accessing a weak set from multiple threads or fibers, you MUST use a mutex or another locking mechanism.
@@ -43,7 +43,7 @@ set
 
 ## Weak::Map
 
-`Weak::Map` behaves similar to a `Hash` or an `ObjectSpace::WeakMap` in Ruby (aka. MRI, aka. YARV). 
+[`Weak::Map`](https://www.rubydoc.info/gems/weak/Weak/Map) behaves similar to a `Hash` or an `ObjectSpace::WeakMap` in Ruby (aka. MRI, aka. YARV). 
 Both keys and values are weak references, allowing either of them to be garbage collected. If either the key or the value of a pair is garbage collected, the entire pair will be removed from the `Weak::Map`.
 
 > [!CAUTION]
@@ -72,7 +72,7 @@ map
 
 ## Weak::Cache
 
-`Weak::Cache` is a thread-safe wrapper around `Weak::Map`. The class behaves similar to an `ActiveSupport::Cache::Store`.
+[`Weak::Cache`](https://www.rubydoc.info/gems/weak/Weak/Cache) is a thread-safe wrapper around `Weak::Map`. The class behaves similar to an `ActiveSupport::Cache::Store`.
 
 > [!TIP]
 > `Weak::Cache` objects can safely be used from multiple threads and fibers concurrently without any additional locks.
