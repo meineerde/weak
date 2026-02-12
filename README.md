@@ -9,7 +9,7 @@
 [![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/meineerde/weak/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak?branch=main)
 
-Weak is a Ruby library which implements collections of unordered values without strong object references.
+Weak is a Ruby library which implements collections of unordered values with weak object references.
 
 We provide multiple classes which behave similar to their standard-library counterparts. However, all elements are only weakly referenced. That way, all elements can be garbage collected and silently removed from the collection unless they are still referenced from some other live object.
 
