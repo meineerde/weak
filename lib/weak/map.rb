@@ -39,8 +39,8 @@ module Weak
   #
   # ## Implementation Details
   #
-  # The various Ruby implementations and versions show quite diverse behavior in
-  # their respective `ObjectSpace::WeakMap` implementations. To provide a
+  # The supported Ruby implementations and versions implement diverse behavior
+  # in their respective `ObjectSpace::WeakMap` implementations. To provide a
   # unified behavior on all implementations, we use different storage
   # strategies:
   #
