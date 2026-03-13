@@ -293,9 +293,9 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/meinee
 
 Weak is available as free and open source under the terms of the [MIT License](https://github.com/meineerde/weak/blob/main/LICENSE.txt).
 
-While this license does not preclude you from using Weak in projects associated with so-called "AI", you do not have the author's consent to do so. This may seem like a contradiction, but copyright is a blunt tool that does not in general have the humanistic nuance to describe something like "you can legally do this thing, but if you do, you're an asshole."
+You do not have the author's consent to use Weak in projects associated with so-called "AI" (generative AI, LLMs, ...), although the MIT license does not specifically preclude you from doing so. This may seem like a contradiction, but copyright is a blunt tool that does not in general have the humanistic nuance to describe something like "you can legally do this thing, but if you do, you're an asshole."
 
-We also explicitly affirm: Trans Rights Are Human Rights. If you do not agree, please refrain from using Weak.
+We also explicitly affirm: Trans Rights Are Human Rights. We explicitly discourage the usage of Weak in any environment where this basic decency is not universally afforded.
 
 (Thanks to [Cassandra Granade](https://codeberg.org/cgranade/do#license-and-ai-policy) for the inspiration.)
 

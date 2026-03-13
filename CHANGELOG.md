@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Add documentation for remaining `Weak::Cache` methods.
+- Clarify usage policy
 
 ## [0.3.1] - 2026-01-16
 
