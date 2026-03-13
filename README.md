@@ -246,7 +246,7 @@ end
 
 ### Weak::Cache Example
 
-We can simplify the above example by using `Weak::Cache`.
+Insted of manually locking a `Weak::Map` to get or create the lock for provided `object` as in the above example, we can leverage a `Weak::Cache` object which is inherently threadsafe. This allows us to update the above example as follows:
 
 ```ruby
 require "weak/cache"

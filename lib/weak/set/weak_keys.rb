@@ -16,7 +16,7 @@ module Weak
     #
     # The `ObjectSpace::WeakMap` does not allow to explicitly delete entries. We
     # emulate this by setting the garbage-collectible value of a deleted entry
-    # to a simple new object. This value will be garbage collected on the next
+    # to a new "empty" object. This value will be garbage collected on the next
     # GC run which will then remove the entry. When accessing elements, we
     # delete and filter out these recently deleted entries.
     module WeakKeys
