@@ -87,7 +87,7 @@ jobs:
           bundler-cache: true
 
       - name: Run specs
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: ${{ matrix.retryable && 3 || 1 }}
