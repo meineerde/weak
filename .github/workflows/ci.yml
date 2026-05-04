@@ -32,6 +32,7 @@ jobs:
 
           - jruby-9.4
           - jruby-10.0
+          - jruby-10.1
         coverage:
           - 1
         retryable:
