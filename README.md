@@ -6,7 +6,7 @@
 [![documentation badge](https://img.shields.io/badge/docs-rubydoc.info-blue.svg)](https://www.rubydoc.info/gems/weak)
 
 [![code style: standard badge](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standardrb/standard)
-[![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg)](https://github.com/meineerde/weak/actions/workflows/ci.yml)
+[![CI status badge](https://github.com/meineerde/weak/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/meineerde/weak/actions/workflows/ci.yml?query=branch%3Amain)
 [![Coverage Status](https://coveralls.io/repos/github/meineerde/weak/badge.svg?branch=main)](https://coveralls.io/github/meineerde/weak?branch=main)
 
 Weak is a Ruby library which implements collections of unordered values with weak object references.
