@@ -4,6 +4,8 @@
 
 - Add documentation for remaining `Weak::Cache` methods.
 - Clarify usage policy
+- Update Github actions
+- Run specs for JRuby 10.1
 
 ## [0.3.1] - 2026-01-16
 
