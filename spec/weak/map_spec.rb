@@ -633,6 +633,12 @@ RSpec.describe Weak::Map do
       expect(map.default_proc.call(1)).to eq "Montreal"
       expect(map[1]).to eq "Montreal"
     end
+
+    it "does not clear the #default value if the given object is invalid" do
+      map.default = 123
+      expect { map.default_proc = Object.new }.to raise_error(TypeError)
+      expect(map.default).to eq 123
+    end
   end
 
   describe "#delete" do

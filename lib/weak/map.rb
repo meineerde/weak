@@ -406,10 +406,9 @@ module Weak
     # @return [Proc, nil] the new default proc
     # @raise [TypeError] if the given `proc` can not be converted to a `Proc`.
     def default_proc=(proc)
-      @default_value = nil
-      return @default_proc = nil if proc.nil?
-
-      if Proc === proc
+      if proc.nil?
+        default_proc = nil
+      elsif Proc === proc
         default_proc = proc
       elsif proc.respond_to?(:to_proc)
         default_proc = proc.to_proc
@@ -421,16 +420,16 @@ module Weak
         raise TypeError, "no implicit conversion of #{proc.class} into Proc"
       end
 
-      if default_proc.lambda?
+      if default_proc&.lambda?
         arity = default_proc.arity
         if arity != 2 && (arity >= 0 || arity < -3)
           arity = -arity - 1 if arity < 0
           raise TypeError, "default_proc takes two arguments (2 for #{arity})"
         end
       end
-      @default_proc = default_proc
 
-      default_proc
+      @default_value = nil
+      @default_proc = default_proc
     end
 
     # Deletes every key-value pair from `self` for which the given block

@@ -18,7 +18,7 @@
 ### Fixed
 
 - Fix error reporting on Github CI
-
+- Do not clear `Weak::Map#default` if the object given to `Weak::Map#default_proc=` is invalid
 
 ## [0.3.1] - 2026-01-16
 
