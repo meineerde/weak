@@ -102,6 +102,7 @@ jobs:
           github-token: ${{ secrets.github_token }}
           flag-name: rspec-${{ matrix.os }}-${{ matrix.ruby }}
           parallel: true
+          fail-on-error: false
 
   coverage:
     name: Coverage
@@ -117,4 +118,3 @@ jobs:
         with:
           github-token: ${{ secrets.github_token }}
           parallel-finished: true
-          fail-on-error: false
