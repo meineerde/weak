@@ -2,45 +2,63 @@
 
 ## [Unreleased]
 
-- Add documentation for remaining `Weak::Cache` methods.
+### Changed
+
 - Improve documentation for `Weak::Set#delete?`
-- Clarify usage policy
+- Clarify humanistic usage policy
 - Update Github actions
+- Use [Common Changelog](https://common-changelog.org) style for the entire changelog
+
+### Added
+
+- Add documentation for remaining `Weak::Cache` methods.
 - Run specs for JRuby 10.1
 
 ## [0.3.1] - 2026-01-16
+
+### Fixed
 
 - Update changelog of 0.3.0 release
 
 ## [0.3.0] - 2026-01-16
 
-### Features
-
-- Add `Weak::Cache` as a thread-safe wrapper around `Weak::Map` to provide an object cache.
-
-### Bug Fixes
-
-- Fix `Weak::Map#store` method alias to `Weak::Map#[]=`. Previously, it was errouneously aliased to `Weak::Map#[]`.
-
-### Improvements
+### Changed
 
 - Adapt `Weak::Set#inspect` output to more resemble the output of `Set#inspect` in Ruby 4.0
 - Fix typos in code documentation
 - Use `require_relative` instead of require for all gem files
-- Add addititional specs for `Weak::Map`
 - Clarify humanistic usage policy
+
+### Added
+
+- Add `Weak::Cache` as a thread-safe wrapper around `Weak::Map` to provide an object cache.
+- Add addititional specs for `Weak::Map`
+
+### Fixed
+
+- Fix `Weak::Map#store` method alias to `Weak::Map#[]=`. Previously, it was erroneously aliased to `Weak::Map#[]`.
 
 ## [0.2.1] - 2025-12-27
 
-- Fix typos in code documentation
+### Changed
+
 - Ignore some unnecessary methods defined on some `Weak::Set` implementations in `set_spec`
-- Run specs on JRuby 10 in Github Actions
-- Retry TruffleRuby rspec runs on Github Actions to avoid random failures due to flakey GC.
 - Extract `UNDEFINED` to its own file and require it where used.
+
+### Added
+
 - Add more details about the gem version in `Weak::Version`
+- Run specs on JRuby 10 in Github Actions
+
+### Fixed
+
 - Handle object cycles in `pretty_print`.
+- Retry TruffleRuby rspec runs on Github Actions to avoid random failures due to flakey GC.
+- Fix typos in code documentation
 
 ## [0.2.0] - 2025-04-09
+
+### Added
 
 - Add `Weak::Map#delete_if`
 - Add `Weak::Map#keep_if`
@@ -51,6 +69,8 @@
 
 ## [0.1.0] - 2025-03-14
 
+### Added
+
 - Initial version of `Weak::Set` to store an unordered collection of objects.
 - Initial version of `Weak::Map` to store key-value pairs of objects.
 - Support for Ruby 3.0 using the following impementations
@@ -60,4 +80,4 @@
 
 ## [0.0.1.pre] - 2025-02-05
 
-- First blank slate
+First blank slate
