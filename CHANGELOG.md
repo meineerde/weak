@@ -8,6 +8,7 @@
 - Clarify humanistic usage policy
 - Update Github actions
 - Use [Common Changelog](https://common-changelog.org) style for the entire changelog
+- Return the resolved proc from `Weak::Map#default_proc=` instead if the given value
 
 ### Added
 
@@ -17,6 +18,7 @@
 ### Fixed
 
 - Fix error reporting on Github CI
+
 
 ## [0.3.1] - 2026-01-16
 

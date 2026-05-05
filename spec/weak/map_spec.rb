@@ -583,6 +583,12 @@ RSpec.describe Weak::Map do
       expect(map[:city]).to be_nil
     end
 
+    it "returns the resolved proc" do
+      expect(map.public_send(:default_proc=, :to_s))
+        .to be_a(Proc)
+        .and equal(map.default_proc)
+    end
+
     it "raises TypeError if the argument does not respond to to_proc" do
       expect { map.default_proc = 123 }.to raise_error TypeError
     end

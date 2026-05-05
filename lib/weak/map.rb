@@ -430,7 +430,7 @@ module Weak
       end
       @default_proc = default_proc
 
-      proc
+      default_proc
     end
 
     # Deletes every key-value pair from `self` for which the given block
