@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Add documentation for remaining `Weak::Cache` methods.
+- Improve documentation for `Weak::Set#delete?`
 - Clarify usage policy
 - Update Github actions
 - Run specs for JRuby 10.1

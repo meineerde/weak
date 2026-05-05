@@ -125,12 +125,15 @@ module Weak
     #   @return [self]
 
     # @!macro weak_set_method_delete_question
-    #   Deletes the given object from `self` and returns `self` if it was
-    #   present in the set. If the object was not in the set, returns `nil`.
+    #   Deletes the given object from `self` and returns `self` if the given
+    #   object was present in the set. If the object was not in the set,
+    #   returns `nil`.
     #
     #   @param obj [Object]
-    #   @return [self, nil] `self` if the given object was deleted from the set
-    #     or `nil` if the object was not part of the set
+    #   @return [self, nil] `self` if the given object was present in the set
+    #     and was deleted accordingly or `nil` if the object was not part of
+    #     the set
+    #   @see Weak::Set#delete
     #   @!macro weak_set_note_object_equality
 
     # @!macro weak_set_method_each
@@ -424,6 +427,7 @@ module Weak
     #
     # @param obj [Object] an object to delete from the weak set
     # @return [self] always returns self
+    # @see #delete?
     # @!macro weak_set_note_object_equality
     def delete(obj)
       delete?(obj)
