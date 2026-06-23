@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-06-23
+
 ### Changed
 
 - Improve documentation for `Weak::Set#delete?`
