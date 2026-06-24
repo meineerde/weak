@@ -31,7 +31,7 @@ module Weak
     end
 
     # {Weak::Cache} objects can't be frozen since this is not enforced by the
-    # underlying {Weak::Map}, resp. its `ObjectSpace::WeakMap` implementation.
+    # underlying {Weak::Map} and its `ObjectSpace::WeakMap` implementation.
     # Thus, we try to signal this by not actually setting the `frozen?` flag and
     # ignoring attempts to freeze us with just a warning.
     #
@@ -113,7 +113,7 @@ module Weak
     end
 
     # {Weak::Cache} objects can't be frozen since this is not enforced by the
-    # underlying {Weak::Map}, resp. its `ObjectSpace::WeakMap` implementation.
+    # underlying {Weak::Map} and its `ObjectSpace::WeakMap` implementation.
     # Thus, we try to signal this by not actually setting the `frozen?` flag and
     # ignoring attempts to freeze us with just a warning.
     #
