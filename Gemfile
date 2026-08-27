@@ -32,6 +32,14 @@ group :test do
   gem "simplecov", require: false
   gem "coveralls_reborn", require: false
 
+  # Pin jar-dependencies gem (which is a deep transitive dependency of irb via
+  # the coveralls_reborn gem) to the specific version shipped with older JRuby
+  # versions.
+  # https://github.com/jruby/jruby/issues/7262
+  if RUBY_ENGINE == "jruby" && Gem::Requirement.new("< 9.4.10.0") === Gem::Version.new(RUBY_ENGINE_VERSION)
+    gem "jar-dependencies", "0.4.1"
+  end
+
   # Restrict json gem on Truffleruby 22 as newer versions do not compile there
   if RUBY_ENGINE == "truffleruby" && RUBY_ENGINE_VERSION.to_i < 23
     gem "json", "~> 2.5.1"
